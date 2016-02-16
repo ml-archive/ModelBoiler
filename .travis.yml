@@ -1,0 +1,12 @@
+language: objective-c
+osx_image: xcode7.2
+xcode_sdk: macosx
+branches:
+  only:
+    - master
+before_install:
+  - brew update
+  - brew install carthage
+  - carthage bootstrap --verbose
+script:
+  - set -o pipefail && xcodebuild -project "Model Boiler.xcodeproj" -scheme "Model Boiler" -sdk macosx build | xcpretty
