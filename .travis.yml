@@ -5,6 +5,6 @@ branches:
   only:
     - master
 before_install:
-  - carthage bootstrap --verbose
+  - carthage bootstrap
 script:
   - set -o pipefail && xcodebuild -project "Model Boiler.xcodeproj" -scheme "Model Boiler" -configuration Release -sdk macosx build | xcpretty
