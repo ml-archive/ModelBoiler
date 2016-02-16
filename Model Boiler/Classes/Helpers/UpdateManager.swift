@@ -14,7 +14,7 @@ public class UpdateManager: NSObject {
     static let sharedInstance = UpdateManager()
 
     let repoPath     = "repos/nodes-ios/ModelBoiler/"
-    let downloadName = "Model Boiler.app.zip"
+    let downloadName = "Model.Boiler.app.zip"
 
     var updateTimer: NSTimer?
     private override init() { }
