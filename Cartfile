@@ -1,0 +1,3 @@
+github "shpakovski/MASShortcut"
+github "ZipArchive/ZipArchive" "master"
+github "nodes-ios/model-generator"
