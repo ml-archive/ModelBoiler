@@ -1,4 +1,4 @@
 github "jatoben/CommandLine" "v2.0.0"
 github "shpakovski/MASShortcut" "2.3.3"
 github "ZipArchive/ZipArchive" "e9313bf5c14a74518ca995824a2cf2b7e512858c"
-github "nodes-ios/model-generator" "0.6.0"
+github "nodes-ios/model-generator" "0.6.1"
