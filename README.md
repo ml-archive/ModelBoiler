@@ -17,6 +17,14 @@
 
 ## 📦 Installation
 
+### Homebrew Cask
+
+1. Run this command in your terminal
+
+~~~bash
+brew cask install ModelBoiler
+~~~
+
 ### Release
 1. Head over to the [latest release](https://github.com/nodes-ios/ModelBoiler/releases/latest).
 2. Download the `Model Boiler.app.zip`.
