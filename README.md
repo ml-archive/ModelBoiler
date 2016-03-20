@@ -32,10 +32,11 @@ brew cask install ModelBoiler
 
 ### Manual
 1. Download or clone the repository.
-2. Open the `Model Boiler.xcodeproj`.
-3. Archive.
-4. Choose Export in the Organizer window.
-5. Open the executable located at:  
+2. Install the dependencies by running `carthage bootstrap --platform osx` from the unzipped folder in your terminal.
+3. Open the `Model Boiler.xcodeproj`.
+4. Archive.
+5. Choose Export ("Save Built Products" option) in the Organizer window.
+6. Open the executable located at:  
 
 ~~~
 ~/Desktop/Model Boiler {DATE}/Products/Applications/Model Boiler.app
