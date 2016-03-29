@@ -170,7 +170,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         SettingsManager.setSetting(.OnlyCreateInitializer, enabled: newState)
         
         if let camelCaseItem = optionsMenu.itemWithTag(MenuItem.OnlyCreateInitializer.rawValue) {
-            camelCaseItem.state = newState == true ? NSOffState : NSOnState
+            camelCaseItem.state = newState == true ? NSOnState : NSOffState
         }
     }
     
