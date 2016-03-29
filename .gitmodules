@@ -1,0 +1,12 @@
+[submodule "Carthage/Checkouts/CommandLine"]
+	path = Carthage/Checkouts/CommandLine
+	url = https://github.com/jatoben/CommandLine.git
+[submodule "Carthage/Checkouts/MASShortcut"]
+	path = Carthage/Checkouts/MASShortcut
+	url = https://github.com/shpakovski/MASShortcut.git
+[submodule "Carthage/Checkouts/model-generator"]
+	path = Carthage/Checkouts/model-generator
+	url = https://github.com/nodes-ios/model-generator.git
+[submodule "Carthage/Checkouts/ZipArchive"]
+	path = Carthage/Checkouts/ZipArchive
+	url = https://github.com/ZipArchive/ZipArchive.git

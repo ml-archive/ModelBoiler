@@ -31,7 +31,8 @@ struct Service {
         generatorSettings.moduleName = nil
         generatorSettings.noConvertCamelCase = SettingsManager.isSettingEnabled(.NoCamelCaseConversion)
         generatorSettings.useNativeDictionaries = SettingsManager.isSettingEnabled(.UseNativeDictionaries)
-
+        generatorSettings.onlyCreateInitializer = SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
+        
         do {
             // Try to generate the code
             let code = try ModelGenerator.modelCodeFromSourceCode(source, withSettings: generatorSettings)
