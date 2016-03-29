@@ -34,7 +34,7 @@ extension NSApplication {
     }
 
     func verifyAppInstallLocation() {
-        if !isInApplications() {
+        if !isInApplications() && !isInBrewsFolder() {
 
             let alert = NSAlert()
             alert.addButtonWithTitle("Install in Applications folder")
