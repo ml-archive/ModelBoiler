@@ -34,7 +34,7 @@ extension NSApplication {
     }
 
     func verifyAppInstallLocation() {
-        if !isInApplications() {
+        if !isInApplications() && !isInBrewsFolder() {
 
             let alert = NSAlert()
             alert.addButtonWithTitle("Install in Applications folder")
@@ -72,9 +72,15 @@ extension NSApplication {
 
         return sourcePath == expectedPath
     }
+    
+    func isInBrewsFolder() -> Bool {
+        let sourcePath = NSBundle.mainBundle().bundlePath
+        
+        return sourcePath.containsString("homebrew-cask/Caskroom")
+    }
 
     func moveToApplicationsIfNecessary() throws {
-        if isInApplications() { return }
+        if isInApplications() || isInBrewsFolder() { return }
 
         let bundle     = NSBundle.mainBundle()
         let sourcePath = bundle.bundlePath
