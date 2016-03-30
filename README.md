@@ -22,7 +22,7 @@
 1. Run this command in your terminal
 
 ~~~bash
-brew cask install ModelBoiler
+brew cask install model-boiler
 ~~~
 
 ### Release
