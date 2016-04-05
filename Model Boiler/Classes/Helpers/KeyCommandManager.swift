@@ -36,7 +36,7 @@ struct KeyCommandManager {
     static func updateKeyCommand(command: String, modifierMask: NSEventModifierFlags) throws {
         let bundle = NSBundle.mainBundle()
 
-        guard let appServices = bundle.infoDictionary?["NSServices"]?[0] as? [String: AnyObject],
+        guard let appServices = bundle.infoDictionary?["NSServices"]?.firstObject as? [String: AnyObject],
             bundleIdentifier = bundle.bundleIdentifier,
             serviceName = appServices["NSMenuItem"]?["default"] as? String,
             methodName = appServices["NSMessage"] as? String else {
