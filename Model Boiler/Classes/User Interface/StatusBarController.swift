@@ -15,6 +15,7 @@ enum MenuItem: Int {
     case Generate
     case SoundEnabled
     case CamelCaseConversion
+    case OnlyCreateInitializer
     case Preferences
     case Restart
     case Quit
@@ -22,7 +23,8 @@ enum MenuItem: Int {
 
 class StatusBarController: NSObject, NSMenuDelegate {
 
-    let statusMenu = NSMenu()
+    let statusMenu  = NSMenu()
+    let optionsMenu = NSMenu()
     let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
 
     var preferencesController: PreferencesController?
@@ -47,47 +49,56 @@ class StatusBarController: NSObject, NSMenuDelegate {
             let build   = infoDict["CFBundleVersion"]!
             let name    = infoDict["CFBundleName"]!
 
-            let versionItem = NSMenuItem(title: "\(name) v\(version) (\(build))", action: "", keyEquivalent: "")
+            let versionItem = NSMenuItem(title: "\(name) v\(version) (\(build))", action: nil, keyEquivalent: "")
             versionItem.tag = MenuItem.Title.rawValue
             statusMenu.addItem(versionItem)
         }
 
         // Menu item for generation
-        let generateItem = NSMenuItem(title: "Current hotkey: ", action: "", keyEquivalent: "")
+        let generateItem = NSMenuItem(title: "Current hotkey: ", action: nil, keyEquivalent: "")
         generateItem.tag = MenuItem.Generate.rawValue
         statusMenu.addItem(generateItem)
 
         // Separator
         statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.Separator.rawValue))
 
-        // Add section title
-        statusMenu.addItem(NSMenuItem(title: "Options:", action: "", keyEquivalent: ""))
-
+        // Add options menu
+        let optionsItem = NSMenuItem( title: "Options", action: nil, keyEquivalent: "")
+        statusMenu.addItem(optionsItem)
+        statusMenu.setSubmenu(optionsMenu, forItem: optionsItem)
+        
         // Camel case conversion item
-        let camelCaseItem    = NSMenuItem(title: "camelCase -> underscore_notation", action: "toggleCamelCaseConversion", keyEquivalent: "")
+        let camelCaseItem    = NSMenuItem(title: "Map camelCase -> underscore_notation", action: #selector(toggleCamelCaseConversion), keyEquivalent: "")
         camelCaseItem.state  = SettingsManager.isSettingEnabled(.NoCamelCaseConversion) ? NSOffState : NSOnState
         camelCaseItem.target = self
         camelCaseItem.tag    = MenuItem.CamelCaseConversion.rawValue
-        statusMenu.addItem(camelCaseItem)
-
-        // Separator
-        statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.Separator.rawValue))
+        optionsMenu.addItem(camelCaseItem)
 
         // Sound enabled item
-        let soundItem    = NSMenuItem(title: "Audio enabled", action: "toggleSoundEnabled", keyEquivalent: "")
+        let soundItem    = NSMenuItem(title: "Audio enabled", action: #selector(StatusBarController.toggleSoundEnabled), keyEquivalent: "")
         soundItem.state  = SettingsManager.isSettingEnabled(.SoundEnabled) ? NSOnState : NSOffState
         soundItem.target = self
         soundItem.tag    = MenuItem.SoundEnabled.rawValue
-        statusMenu.addItem(soundItem)
-
+        optionsMenu.addItem(soundItem)
+        
+        // Generate Initializer only
+        let initializerOnlyItem    = NSMenuItem(title: "Only generate initializer (useful for use with Realm/CoreData)", action: #selector(toggleOnlyCreateInitializers), keyEquivalent: "")
+        initializerOnlyItem.state  = SettingsManager.isSettingEnabled(.OnlyCreateInitializer) ? NSOnState : NSOffState
+        initializerOnlyItem.target = self
+        initializerOnlyItem.tag    = MenuItem.OnlyCreateInitializer.rawValue
+        optionsMenu.addItem(initializerOnlyItem)
+        
+        // Separator
+        statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.Separator.rawValue))
+        
         // Preferences item
-        let preferencesItem = NSMenuItem(title: "Settings", action: "showSettings", keyEquivalent: "")
+        let preferencesItem = NSMenuItem(title: "Settings", action: #selector(StatusBarController.showSettings), keyEquivalent: "")
         preferencesItem.target = self
         preferencesItem.tag    = MenuItem.Preferences.rawValue
         statusMenu.addItem(preferencesItem)
 
         // Check for updates item
-        let updateItem    = NSMenuItem(title: "Check for updates", action: "updatePressed", keyEquivalent: "")
+        let updateItem    = NSMenuItem(title: "Check for updates", action: #selector(StatusBarController.updatePressed), keyEquivalent: "")
         updateItem.target = self
         updateItem.tag    = MenuItem.Update.rawValue
         statusMenu.addItem(updateItem)
@@ -96,13 +107,13 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.Separator.rawValue))
 
         // Restart item
-        let restartItem = NSMenuItem(title: "Restart", action: "restartPressed", keyEquivalent: "")
+        let restartItem = NSMenuItem(title: "Restart", action: #selector(StatusBarController.restartPressed), keyEquivalent: "")
         restartItem.tag = MenuItem.Restart.rawValue
         restartItem.target = self
         statusMenu.addItem(restartItem)
 
         // Quit item
-        let quitItem = NSMenuItem(title: "Quit", action: "quitPressed", keyEquivalent: "")
+        let quitItem = NSMenuItem(title: "Quit", action: #selector(StatusBarController.quitPressed), keyEquivalent: "")
         quitItem.tag = MenuItem.Quit.rawValue
         quitItem.target = self
         statusMenu.addItem(quitItem)
@@ -140,7 +151,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         let newState = !SettingsManager.isSettingEnabled(.SoundEnabled)
         SettingsManager.setSetting(.SoundEnabled, enabled: newState)
 
-        if let soundItem = statusMenu.itemWithTag(MenuItem.SoundEnabled.rawValue) {
+        if let soundItem = optionsMenu.itemWithTag(MenuItem.SoundEnabled.rawValue) {
             soundItem.state = newState == true ? NSOnState : NSOffState
         }
     }
@@ -149,11 +160,20 @@ class StatusBarController: NSObject, NSMenuDelegate {
         let newState = !SettingsManager.isSettingEnabled(.NoCamelCaseConversion)
         SettingsManager.setSetting(.NoCamelCaseConversion, enabled: newState)
 
-        if let camelCaseItem = statusMenu.itemWithTag(MenuItem.CamelCaseConversion.rawValue) {
+        if let camelCaseItem = optionsMenu.itemWithTag(MenuItem.CamelCaseConversion.rawValue) {
             camelCaseItem.state = newState == true ? NSOffState : NSOnState
         }
     }
-
+    
+    func toggleOnlyCreateInitializers() {
+        let newState = !SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
+        SettingsManager.setSetting(.OnlyCreateInitializer, enabled: newState)
+        
+        if let camelCaseItem = optionsMenu.itemWithTag(MenuItem.OnlyCreateInitializer.rawValue) {
+            camelCaseItem.state = newState == true ? NSOnState : NSOffState
+        }
+    }
+    
     func showSettings() {
         preferencesController = PreferencesController.newFromNib()
         preferencesController?.window?.makeKeyFrontAndCenter(self)

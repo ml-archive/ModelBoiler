@@ -26,7 +26,7 @@ public class UpdateManager: NSObject {
     public func start() {
         // Schedule update timer for every hour
         checkForUpdates()
-        updateTimer = NSTimer.scheduledTimerWithTimeInterval(3600, target: self, selector: "autoUpdateTimerFired", userInfo: nil, repeats: true)
+        updateTimer = NSTimer.scheduledTimerWithTimeInterval(3600, target: self, selector: #selector(UpdateManager.autoUpdateTimerFired), userInfo: nil, repeats: true)
     }
 
     public static func stop() {

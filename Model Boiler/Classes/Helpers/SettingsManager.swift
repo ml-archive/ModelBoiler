@@ -13,6 +13,7 @@ enum Setting: String {
     case SoundEnabled          = "SoundEnabled"
     case NoCamelCaseConversion = "NoCamelCaseConversion"
     case UseNativeDictionaries = "UseNativeDictionaries"
+    case OnlyCreateInitializer = "OnlyCreateInitializer"
 }
 
 struct SettingsManager {

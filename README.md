@@ -11,10 +11,6 @@
 
 ![Gif](http://i.imgur.com/APmMhO6.gif)
 
-
-> TODO: Improve  
-
-
 ## 📦 Installation
 
 ### Homebrew Cask
@@ -22,7 +18,7 @@
 1. Run this command in your terminal
 
 ~~~bash
-brew cask install ModelBoiler
+brew cask install model-boiler
 ~~~
 
 ### Release
@@ -41,6 +37,37 @@ brew cask install ModelBoiler
 ~~~
 ~/Desktop/Model Boiler {DATE}/Products/Applications/Model Boiler.app
 ~~~
+
+
+## 💻 Usage
+
+Model Boiler is a menu bar application, meaning that you won't find it's icon in the Dock. If you want to access the settings, update or quit Model Boiler then look for the icon in the top menu bar on the right side.
+
+### Generating Code
+
+1. Select your model code with the cursor
+2. Press the Model Boiler shortcut (can be customized in settings)
+3. Paste the generated code
+4. Profit!
+
+### Settings
+
+**Key case conversion** is one of the features of Model Boiler, which allows you to easily convert your key names from `yourProperty` to `your_property`. (note: this is overriden if custom key is specified)
+
+**Custom shortcut** can be configured in the settings window of Model Boiler and the default shortcut is `⌘ + §`.
+
+### Key Override
+
+There is a hidden feature of Model Boiler that allows you to override the property key that should be used in the generated code. To be able to override the key just write a comment on the same line where your property is declared like this:
+
+~~~swift
+var name = "" // <-customNameKey
+~~~
+
+This will then use the specified key in the generated code. However, note that this will override all other key modifications that Model Boiler normally does (like automatic camelCase -> snake_case conversion).
+
+
+**Note:** Model Boiler currently doesn't support nested structs. You will need to generate boilerplate code for your nested structs separately.
 
 ## :octocat: Dependencies
 #### [Serializable](https://github.com/nodes-ios/Serializable)  
