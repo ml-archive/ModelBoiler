@@ -9,7 +9,7 @@
 
 **Model Boiler** is a Mac OS X application used to quickly generate model boilerplate code for models using the `Serializable` protocol.
 
-![Gif](http://i.imgur.com/APmMhO6.gif)
+![Gif](modelboiler.gif)
 
 ## 📦 Installation
 
