@@ -13,11 +13,11 @@ class Observer: NSObject {
 
     let _callback: () -> Void
 
-    init(callback: () -> Void) {
+    init(callback: @escaping () -> Void) {
         _callback = callback
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         _callback()
     }
 }
@@ -27,7 +27,7 @@ class Observer: NSObject {
 autoreleasepool {
 
     // the application pid
-    let parentPID = atoi(Process.arguments[1])
+    let parentPID = atoi(CommandLine.arguments[1])
 
     // get the application instance
     if let app = NSRunningApplication(processIdentifier: parentPID) {
@@ -44,8 +44,8 @@ autoreleasepool {
 
         // relaunch
         do {
-            try NSWorkspace.sharedWorkspace().launchApplicationAtURL(
-                    bundleURL,
+            try NSWorkspace.shared().launchApplication(
+                    at: bundleURL,
                     options: NSWorkspaceLaunchOptions(rawValue: 0),
                     configuration: [:])
         } catch {

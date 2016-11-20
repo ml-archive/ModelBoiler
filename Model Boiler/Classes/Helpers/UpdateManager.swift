@@ -7,33 +7,34 @@
 //
 
 import Cocoa
+import Foundation
 import ZipArchive
 
-public class UpdateManager: NSObject {
+open class UpdateManager: NSObject {
 
     static let sharedInstance = UpdateManager()
 
     let repoPath     = "repos/nodes-ios/ModelBoiler/"
     let downloadName = "Model.Boiler.app.zip"
 
-    var updateTimer: NSTimer?
-    private override init() { }
+    var updateTimer: Timer?
+    fileprivate override init() { }
 
-    public static func start() {
+    open static func start() {
         sharedInstance.start()
     }
 
-    public func start() {
+    open func start() {
         // Schedule update timer for every hour
         checkForUpdates()
-        updateTimer = NSTimer.scheduledTimerWithTimeInterval(3600, target: self, selector: #selector(UpdateManager.autoUpdateTimerFired), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 3600, target: self, selector: #selector(UpdateManager.autoUpdateTimerFired), userInfo: nil, repeats: true)
     }
 
-    public static func stop() {
+    open static func stop() {
         sharedInstance.stop()
     }
 
-    public func stop() {
+    open func stop() {
         updateTimer?.invalidate()
         updateTimer = nil
     }
@@ -42,15 +43,15 @@ public class UpdateManager: NSObject {
         checkForUpdates(showAlerts: false)
     }
 
-    public func checkForUpdates(showAlerts showAlerts: Bool = true) {
-        guard let request = NSMutableURLRequest.requestForGithubWithPath(repoPath + "releases") else {
+    open func checkForUpdates(showAlerts: Bool = true) {
+        guard let request = URLRequest.requestForGithubWithPath(repoPath + "releases") else {
             return
         }
 
-        let session = NSURLSession.sharedSession()
+        let session = URLSession.shared
 
         // Start the request with completion handler
-        session.dataTaskWithRequest(request, completionHandler: {
+        session.dataTask(with: request, completionHandler: {
             data, response, error in
 
             // If error happened
@@ -69,10 +70,10 @@ public class UpdateManager: NSObject {
 
             do {
                 // Try to parse json
-                let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+                let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
 
                 // Convert to dictionary and compare versions
-                if let releases = json as? [[String : AnyObject]], latest = releases.first {
+                if let releases = json as? [[String : AnyObject]], let latest = releases.first {
                     self.evaluateReleaseAndDownloadIfNeeded(latest, showAlerts: showAlerts)
                 } else {
                     NSUserNotification.display(
@@ -90,7 +91,7 @@ public class UpdateManager: NSObject {
 
     // MARK: - Private -
 
-    private func evaluateReleaseAndDownloadIfNeeded(release: [String: AnyObject], showAlerts: Bool) {
+    fileprivate func evaluateReleaseAndDownloadIfNeeded(_ release: [String: AnyObject], showAlerts: Bool) {
         let failureAction = {
             NSUserNotification.display(
                 title: "Update check failed",
@@ -98,7 +99,7 @@ public class UpdateManager: NSObject {
         }
 
         guard let releaseVersion = release["tag_name"] as? String else { failureAction(); return }
-        guard let currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String else { failureAction(); return }
+        guard let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else { failureAction(); return }
 
         // Compare version numbers
         if releaseVersion.isBiggerThanVersion(currentVersion) {
@@ -124,22 +125,22 @@ public class UpdateManager: NSObject {
         }
     }
 
-    private func getReleaseDownloadURL(release: [String: AnyObject]) -> NSURL? {
+    fileprivate func getReleaseDownloadURL(_ release: [String: AnyObject]) -> URL? {
         guard let assets = release["assets"] as? [[String: AnyObject]] else { return nil }
         for asset in assets {
             guard let name = asset["name"] as? String else { continue }
-            if let URLString = asset["browser_download_url"] as? String where name == downloadName {
-                return NSURL(string: URLString)
+            if let URLString = asset["browser_download_url"] as? String, name == downloadName {
+                return URL(string: URLString)
             }
         }
         return nil
     }
 
-    private func downloadZipFileFromURL(releaseURL: NSURL) {
-        let request = NSURLRequest(URL: releaseURL)
-        let session = NSURLSession.sharedSession()
+    fileprivate func downloadZipFileFromURL(_ releaseURL: URL) {
+        let request = URLRequest(url: releaseURL)
+        let session = URLSession.shared
 
-        session.downloadTaskWithRequest(request, completionHandler: {
+        session.downloadTask(with: request, completionHandler: {
             downloadedFileURL, response, error in
 
             // If error happened
@@ -162,7 +163,7 @@ public class UpdateManager: NSObject {
 
             // Unarchive the file
             do {
-                try SSZipArchive.unzipFileAtPath(fileURL.path, toDestination: destinationDirectory, overwrite: true, password: nil)
+                try SSZipArchive.unzipFile(atPath: fileURL.path, toDestination: destinationDirectory, overwrite: true, password: nil)
             } catch {
                 NSUserNotification.display(
                     title: "Update unzip failed",
@@ -177,9 +178,9 @@ public class UpdateManager: NSObject {
         }).resume()
     }
 
-    private func updateWithFileAtPath(path: String) {
+    fileprivate func updateWithFileAtPath(_ path: String) {
         // Get app name, to get executable name
-        guard let appName = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as? String else {
+        guard let appName = Bundle.main.infoDictionary?["CFBundleName"] as? String else {
             NSUserNotification.display(
                 title: "Update failed",
                 andMessage: "Could not get app name.")
@@ -187,7 +188,7 @@ public class UpdateManager: NSObject {
         }
 
         // Find applications dir
-        let appDirectoryPaths = NSSearchPathForDirectoriesInDomains(.ApplicationDirectory, .LocalDomainMask, true)
+        let appDirectoryPaths = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .localDomainMask, true)
         guard let appDirectory = appDirectoryPaths.first else {
             NSUserNotification.display(
                 title: "Update failed",
@@ -196,12 +197,12 @@ public class UpdateManager: NSObject {
         }
 
         // Get the update file (= source file)
-        var sourceURL = NSURL(fileURLWithPath: path, isDirectory: true)
-        sourceURL     = sourceURL.URLByAppendingPathComponent("\(appName).app", isDirectory: true)
+        var sourceURL = URL(fileURLWithPath: path, isDirectory: true)
+        sourceURL     = sourceURL.appendingPathComponent("\(appName).app", isDirectory: true)
 
         // Get the local file (= destination file)
-        var destinationURL = NSURL(fileURLWithPath: appDirectory)
-        destinationURL = destinationURL.URLByAppendingPathComponent("\(appName).app", isDirectory: true)
+        var destinationURL = URL(fileURLWithPath: appDirectory)
+        destinationURL = destinationURL.appendingPathComponent("\(appName).app", isDirectory: true)
 
         // Show note about updating
         NSUserNotification.display(
@@ -213,37 +214,28 @@ public class UpdateManager: NSObject {
         var error:NSError?
 
         // Start writing
-        coordinator.coordinateWritingItemAtURL(destinationURL, options: .ForDeleting, error: &error, byAccessor: { writeURL in
+        coordinator.coordinate(writingItemAt: destinationURL, options: .forDeleting, error: &error, byAccessor: { writeURL in
             do {
                 var resultURL: NSURL?
 
                 // Replace the file first
-                try NSFileManager.defaultManager().replaceItemAtURL(writeURL,
-                    withItemAtURL: sourceURL,
+                try FileManager.default.replaceItem(at: writeURL,
+                    withItemAt: sourceURL,
                     backupItemName: "\(appName)_old.app",
-                    options: .UsingNewMetadataOnly,
+                    options: .usingNewMetadataOnly,
                     resultingItemURL: &resultURL)
 
                 // Check for the output file
-                guard let finalURL = resultURL else {
+                guard let finalURL = resultURL?.appendingPathComponent("Contents/MacOS/\(appName)") else {
                     NSUserNotification.display(
                         title: "Update failed",
                         andMessage: "Could not get the new file after copy.")
                     return
                 }
 
-                // Get the binary path
-                let binaryURL = finalURL.URLByAppendingPathComponent("Contents/MacOS/\(appName)")
-                guard let binaryPath = String(CString: binaryURL.fileSystemRepresentation, encoding: NSUTF8StringEncoding) else {
-                    NSUserNotification.display(
-                        title: "Update failed",
-                        andMessage: "Could not get the binary path.")
-                    return
-                }
-
                 // Set the proper permissions
-                let priviliges = [NSFilePosixPermissions : 493]
-                try NSFileManager.defaultManager().setAttributes(priviliges, ofItemAtPath: binaryPath)
+                let priviliges = [FileAttributeKey.posixPermissions : 493]
+                try FileManager.default.setAttributes(priviliges, ofItemAtPath: finalURL.absoluteString)
 
                 // Show notifications
                 NSUserNotification.display(

@@ -17,9 +17,9 @@ struct Service {
 
     // MARK: - Main Function -
 
-    static func generate(pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()) {
+    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general()) {
 
-        guard let source = pasteboard.stringForType(NSPasteboardTypeString) where (pasteboard.pasteboardItems?.count == 1) else {
+        guard let source = pasteboard.string(forType: NSPasteboardTypeString), (pasteboard.pasteboardItems?.count == 1) else {
             NSUserNotification.display(title: "No text selected",
                 andMessage: "Nothing was found in the pasteboard.")
             playSound(Service.errorSound)
@@ -35,14 +35,14 @@ struct Service {
         
         do {
             // Try to generate the code
-            let code = try ModelGenerator.modelCodeFromSourceCode(source, withSettings: generatorSettings)
+            let code = try ModelGenerator.modelCode(fromSourceCode: source, withSettings: generatorSettings)
 
             // Play success sound
             playSound(Service.successSound)
 
             // Copy back to pasteboard
-            NSPasteboard.generalPasteboard().declareTypes([NSPasteboardTypeString], owner: nil)
-            NSPasteboard.generalPasteboard().setString(code, forType: NSPasteboardTypeString)
+            NSPasteboard.general().declareTypes([NSPasteboardTypeString], owner: nil)
+            NSPasteboard.general().setString(code, forType: NSPasteboardTypeString)
 
             // Success, show notification
             NSUserNotification.display(
@@ -62,8 +62,8 @@ struct Service {
 
     // MARK: - Helpers -
 
-    static func playSound(sound: NSSound?) {
-        if !NSUserDefaults.standardUserDefaults().boolForKey("muteSound") {
+    static func playSound(_ sound: NSSound?) {
+        if !UserDefaults.standard.bool(forKey: "muteSound") {
             sound?.play()
         }
     }

@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     let mainController = StatusBarController()
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Stop already running instances
         NSApp.terminateAlreadyRunningInstances()
 
@@ -36,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         UpdateManager.start()
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(_ aNotification: Notification) {
         UpdateManager.stop()
     }
 }

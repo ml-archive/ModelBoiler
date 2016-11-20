@@ -10,24 +10,24 @@ import Foundation
 import Cocoa
 
 extension NSUserNotification {
-    static func display(title title: String, andMessage message: String) {
+    static func display(title: String, andMessage message: String) {
         dispatch(background: false) {
             let notification             = NSUserNotification()
             notification.title           = title
             notification.informativeText = message
-            NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
+            NSUserNotificationCenter.default.deliver(notification)
         }
     }
 }
 
 extension NSApplication {
     func terminateAlreadyRunningInstances() {
-        guard let identifier = NSBundle.mainBundle().bundleIdentifier else { return }
+        guard let identifier = Bundle.main.bundleIdentifier else { return }
 
         // Terminate all previously running apps with same bundle identifier
-        let runningApps = NSRunningApplication.runningApplicationsWithBundleIdentifier(identifier)
+        let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: identifier)
         for runningApp in runningApps {
-            if !runningApp.isEqual(NSRunningApplication.currentApplication()) {
+            if !runningApp.isEqual(NSRunningApplication.current()) {
                 runningApp.terminate()
             }
         }
@@ -37,8 +37,8 @@ extension NSApplication {
         if !isInApplications() && !isInBrewsFolder() {
 
             let alert = NSAlert()
-            alert.addButtonWithTitle("Install in Applications folder")
-            alert.addButtonWithTitle("Quit")
+            alert.addButton(withTitle: "Install in Applications folder")
+            alert.addButton(withTitle: "Quit")
             alert.messageText     = "Install in Application folder?"
             alert.informativeText = "The app should be in your Applications folder in order to work properly."
             let response = alert.runModal()
@@ -61,10 +61,10 @@ extension NSApplication {
     }
 
     func isInApplications() -> Bool {
-        let sourcePath = NSBundle.mainBundle().bundlePath
-        let appFolders = NSSearchPathForDirectoriesInDomains(.ApplicationDirectory, .LocalDomainMask, true)
+        let sourcePath = Bundle.main.bundlePath
+        let appFolders = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .localDomainMask, true)
 
-        guard let folder = appFolders.first, appName = sourcePath.componentsSeparatedByString("/").last else {
+        guard let folder = appFolders.first, let appName = sourcePath.components(separatedBy: "/").last else {
             return true
         }
 
@@ -74,62 +74,62 @@ extension NSApplication {
     }
     
     func isInBrewsFolder() -> Bool {
-        let sourcePath = NSBundle.mainBundle().bundlePath
+        let sourcePath = Bundle.main.bundlePath
         
-        return sourcePath.containsString("homebrew-cask/Caskroom")
+        return sourcePath.contains("homebrew-cask/Caskroom")
     }
 
     func moveToApplicationsIfNecessary() throws {
         if isInApplications() || isInBrewsFolder() { return }
 
-        let bundle     = NSBundle.mainBundle()
+        let bundle     = Bundle.main
         let sourcePath = bundle.bundlePath
-        let appFolders = NSSearchPathForDirectoriesInDomains(.ApplicationDirectory, .LocalDomainMask, true)
+        let appFolders = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .localDomainMask, true)
 
-        guard let folder = appFolders.first, appName = sourcePath.componentsSeparatedByString("/").last else {
+        guard let folder = appFolders.first, let appName = sourcePath.components(separatedBy: "/").last else {
             throw NSError(domain: bundle.bundleIdentifier ?? "", code: 1000, userInfo: [NSLocalizedDescriptionKey : "Applications folder not found."])
         }
 
         let expectedPath = folder + "/" + appName
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
 
-        if fileManager.fileExistsAtPath(expectedPath) {
-            try fileManager.removeItemAtPath(expectedPath)
+        if fileManager.fileExists(atPath: expectedPath) {
+            try fileManager.removeItem(atPath: expectedPath)
         }
 
-        try fileManager.moveItemAtPath(sourcePath, toPath: expectedPath)
+        try fileManager.moveItem(atPath: sourcePath, toPath: expectedPath)
     }
 
     func restart() {
-        let task = NSTask()
-        task.launchPath = NSBundle.mainBundle().pathForResource("relaunch", ofType: nil)!
-        task.arguments = [String(NSProcessInfo.processInfo().processIdentifier)]
+        let task = Process()
+        task.launchPath = Bundle.main.path(forResource: "relaunch", ofType: nil)!
+        task.arguments = [String(ProcessInfo.processInfo.processIdentifier)]
         task.launch()
     }
 }
 
-extension NSMutableURLRequest {
-    static func requestForGithubWithPath(path: String) -> NSMutableURLRequest? {
-        guard let URL = NSURL(string: "https://api.github.com/\(path)") else {
+extension URLRequest {
+    static func requestForGithubWithPath(_ path: String) -> URLRequest? {
+        guard let URL = URL(string: "https://api.github.com/\(path)") else {
             return nil
         }
 
-        let request = NSMutableURLRequest(URL: URL)
+        var request = URLRequest(url: URL)
         request.addValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         return request
     }
 }
 
 extension NSMenuItem {
-    static func separatorItemWithTag(tag: Int) -> NSMenuItem {
-        let separatorItem = NSMenuItem.separatorItem()
+    static func separatorItemWithTag(_ tag: Int) -> NSMenuItem {
+        let separatorItem = NSMenuItem.separator()
         separatorItem.tag = tag
         return separatorItem
     }
 }
 
 extension NSWindow {
-    func makeKeyFrontAndCenter(sender: AnyObject?) {
+    func makeKeyFrontAndCenter(_ sender: AnyObject?) {
         makeKeyAndOrderFront(sender)
 
         if let screen = self.screen {
@@ -145,31 +145,30 @@ extension NSWindow {
 }
 
 extension String {
-    func versionToArray(version: String) -> [Int] {
-        return version.componentsSeparatedByString(".").map {
+    func versionToArray(_ version: String) -> [Int] {
+        return version.components(separatedBy: ".").map {
             Int($0) ?? 0
         }
     }
 
-    func isBiggerThanVersion(version: String) -> Bool {
+    func isBiggerThanVersion(_ version: String) -> Bool {
         let aVer = versionToArray(self)
         let bVer = versionToArray(version)
 
-        return bVer.lexicographicalCompare(aVer)
+        return bVer.lexicographicallyPrecedes(aVer)
     }
 }
 
-func dispatch(background background: Bool = false, closure: () -> Void) {
-    let queue = background ? dispatch_get_global_queue(QOS_CLASS_UTILITY, 0) : dispatch_get_main_queue()
-    dispatch_async(queue, {
+func dispatch(background: Bool = false, closure: @escaping () -> Void) {
+    let queue = background ? DispatchQueue.global(qos: DispatchQoS.QoSClass.utility) : DispatchQueue.main
+    queue.async(execute: {
         closure()
     })
 }
 
-func delay(delay: Int64, closure: () -> Void) {
-    dispatch_after(
-        dispatch_time(DISPATCH_TIME_NOW, delay * Int64(NSEC_PER_SEC)),
-        dispatch_get_main_queue(), {
+func delay(_ delay: Int64, closure: @escaping () -> Void) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(delay * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
         closure()
     })
 }

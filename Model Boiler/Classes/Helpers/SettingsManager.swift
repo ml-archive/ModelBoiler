@@ -17,11 +17,11 @@ enum Setting: String {
 }
 
 struct SettingsManager {
-    static func isSettingEnabled(setting: Setting) -> Bool {
-        return NSUserDefaults.standardUserDefaults().boolForKey(setting.rawValue)
+    static func isSettingEnabled(_ setting: Setting) -> Bool {
+        return UserDefaults.standard.bool(forKey: setting.rawValue)
     }
 
-    static func setSetting(setting: Setting, enabled: Bool) {
-        NSUserDefaults.standardUserDefaults().setBool(enabled, forKey: setting.rawValue)
+    static func setSetting(_ setting: Setting, enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: setting.rawValue)
     }
 }

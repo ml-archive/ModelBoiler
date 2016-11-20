@@ -43,16 +43,20 @@ class PreferencesController: NSWindowController {
     func updateServiceKeyCommand() {
         let keyCode  = self.shortcutView.shortcutValue.keyCodeString
         let modifier = NSEventModifierFlags(rawValue: self.shortcutView.shortcutValue.modifierFlags)
+        guard let code = keyCode else {
+            loadSavedKeyCommand()
+            return
+        }
 
         do {
-            try KeyCommandManager.updateKeyCommand(keyCode, modifierMask: modifier)
+            try KeyCommandManager.updateKeyCommand(code, modifierMask: modifier)
         } catch {
             // Update failed, revert back
             loadSavedKeyCommand()
         }
     }
 
-    @IBAction func switchChanged(sender: NSButton) {
+    @IBAction func switchChanged(_ sender: NSButton) {
         if sender == nativeDictionariesSwitch {
             let state = (sender.state == NSOnState)
             SettingsManager.setSetting(.UseNativeDictionaries, enabled: state)
