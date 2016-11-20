@@ -7,7 +7,7 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nodes-ios/ModelBoiler/blob/master/LICENSE)
 
 
-**Model Boiler** is a Mac OS X application used to quickly generate model boilerplate code for models using the `Serializable` protocol.
+**Model Boiler** is a Mac OS X application used to quickly generate model boilerplate code for models using [🐍 Serpent](https://github.com/nodes-ios/Serpent) and the `Serializable` protocol.
 
 ![Gif](modelboiler.gif)
 
@@ -70,7 +70,7 @@ This will then use the specified key in the generated code. However, note that t
 **Note:** Model Boiler currently doesn't support nested structs. You will need to generate boilerplate code for your nested structs separately.
 
 ## :octocat: Dependencies
-#### [Serializable](https://github.com/nodes-ios/Serializable)  
+#### [Serpent](https://github.com/nodes-ios/Serpent)  
 > A protocol to serialize Swift structs and classes for encoding and decoding. 
 
 You will need this dependency if you want to use the generated boiler plate code.
