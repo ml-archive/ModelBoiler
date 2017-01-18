@@ -3,11 +3,11 @@
 # Model Boiler
 
 [![Travis](https://img.shields.io/travis/nodes-ios/ModelBoiler.svg)](https://travis-ci.org/nodes-ios/ModelBoiler)
-![Plaform](https://img.shields.io/badge/platform-OS X-lightgrey.svg)
+![Plaform](https://img.shields.io/badge/platform-macOS-brightgreen.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nodes-ios/ModelBoiler/blob/master/LICENSE)
 
 
-**Model Boiler** is a Mac OS X application used to quickly generate model boilerplate code for models using [🐍 Serpent](https://github.com/nodes-ios/Serpent) and the `Serializable` protocol.
+**Model Boiler** is a macOS application used to quickly generate model boilerplate code for models using [🐍 Serpent](https://github.com/nodes-ios/Serpent) and the `Serializable` protocol.
 
 ![Gif](modelboiler.gif)
 
@@ -45,7 +45,7 @@ Model Boiler is a menu bar application, meaning that you won't find it's icon in
 
 ### Generating Code
 
-1. Select your model code with the cursor
+1. Select your model code
 2. Press the Model Boiler shortcut (can be customized in settings)
 3. Paste the generated code
 4. Profit!
