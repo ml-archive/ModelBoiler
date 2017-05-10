@@ -75,7 +75,7 @@ This will then use the specified key in the generated code. However, note that t
 
 You will need this dependency if you want to use the generated boiler plate code.
    
-####[model-generator](https://github.com/nodes-ios/model-generator)  
+#### [model-generator](https://github.com/nodes-ios/model-generator)  
 The underlying framework used for the actual generation of the code. Can be also used as a command line tool if you choose to go all nerd.
 
 ## 👥 Credits
