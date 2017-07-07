@@ -27,7 +27,7 @@ extension NSApplication {
         // Terminate all previously running apps with same bundle identifier
         let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: identifier)
         for runningApp in runningApps {
-            if !runningApp.isEqual(NSRunningApplication.current()) {
+            if !runningApp.isEqual(NSRunningApplication.current) {
                 runningApp.terminate()
             }
         }
@@ -43,7 +43,7 @@ extension NSApplication {
             alert.informativeText = "The app should be in your Applications folder in order to work properly."
             let response = alert.runModal()
 
-            if response == NSAlertFirstButtonReturn {
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
                 do {
                     try moveToApplicationsIfNecessary()
                     restart()

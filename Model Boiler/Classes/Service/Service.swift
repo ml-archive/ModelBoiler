@@ -12,14 +12,14 @@ import Cocoa
 
 struct Service {
 
-    static let errorSound   = NSSound(named: "Basso")
-    static let successSound = NSSound(named: "Pop")
+    static let errorSound   = NSSound(named: NSSound.Name(rawValue: "Basso"))
+    static let successSound = NSSound(named: NSSound.Name(rawValue: "Pop"))
 
     // MARK: - Main Function -
 
-    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general()) {
+    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general) {
 
-        guard let source = pasteboard.string(forType: NSPasteboardTypeString), (pasteboard.pasteboardItems?.count == 1) else {
+        guard let source = pasteboard.string(forType: NSPasteboard.PasteboardType.string), (pasteboard.pasteboardItems?.count == 1) else {
             NSUserNotification.display(title: "No text selected",
                 andMessage: "Nothing was found in the pasteboard.")
             playSound(Service.errorSound)
@@ -41,8 +41,8 @@ struct Service {
             playSound(Service.successSound)
 
             // Copy back to pasteboard
-            NSPasteboard.general().declareTypes([NSPasteboardTypeString], owner: nil)
-            NSPasteboard.general().setString(code, forType: NSPasteboardTypeString)
+            NSPasteboard.general.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+            NSPasteboard.general.setString(code, forType: NSPasteboard.PasteboardType.string)
 
             // Success, show notification
             NSUserNotification.display(

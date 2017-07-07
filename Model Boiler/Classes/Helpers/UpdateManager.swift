@@ -39,7 +39,7 @@ open class UpdateManager: NSObject {
         updateTimer = nil
     }
 
-    func autoUpdateTimerFired() {
+    @objc func autoUpdateTimerFired() {
         checkForUpdates(showAlerts: false)
     }
 
