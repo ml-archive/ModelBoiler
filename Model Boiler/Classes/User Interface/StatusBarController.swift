@@ -27,7 +27,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
     let optionsMenu = NSMenu()
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
-    var preferencesController: PreferencesController?
+    @objc var preferencesController: PreferencesController?
 
     override init() {
         super.init()
@@ -38,7 +38,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         updateMenuItems()
     }
 
-    func setupStatusItems() {
+    @objc func setupStatusItems() {
         // Setup image and menu
         statusItem.button?.image = NSImage(named: NSImage.Name(rawValue: "bat"))
         statusItem.menu = statusMenu
@@ -119,7 +119,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         statusMenu.addItem(quitItem)
     }
 
-    func updateMenuItems() {
+    @objc func updateMenuItems() {
         for menuItem in statusMenu.items {
             guard let item = MenuItem(rawValue: menuItem.tag) else { continue }
             switch item {

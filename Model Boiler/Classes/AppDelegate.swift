@@ -11,7 +11,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    let mainController = StatusBarController()
+    @objc let mainController = StatusBarController()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Stop already running instances

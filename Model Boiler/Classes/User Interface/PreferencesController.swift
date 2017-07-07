@@ -13,7 +13,7 @@ class PreferencesController: NSWindowController {
 
     @IBOutlet var shortcutView: MASShortcutView!
     @IBOutlet var nativeDictionariesSwitch: NSButton!
-
+    
     class func newFromNib() -> PreferencesController {
         return PreferencesController(windowNibName: NSNib.Name(rawValue: "Preferences"))
     }
@@ -30,7 +30,7 @@ class PreferencesController: NSWindowController {
         }
     }
 
-    func loadSavedKeyCommand() {
+    @objc func loadSavedKeyCommand() {
         if let keyCommand = KeyCommandManager.currentKeyCommand() {
             let scalars = keyCommand.command.unicodeScalars
             let keyCode = UInt(scalars[scalars.startIndex].value)
@@ -40,7 +40,7 @@ class PreferencesController: NSWindowController {
         }
     }
 
-    func updateServiceKeyCommand() {
+    @objc func updateServiceKeyCommand() {
         let keyCode  = self.shortcutView.shortcutValue.keyCodeString
         let modifier = NSEvent.ModifierFlags(rawValue: self.shortcutView.shortcutValue.modifierFlags)
         guard let code = keyCode else {
@@ -62,7 +62,7 @@ class PreferencesController: NSWindowController {
             SettingsManager.setSetting(.UseNativeDictionaries, enabled: state)
         }
     }
-
+    
     func loadSettings() {
         nativeDictionariesSwitch.state = SettingsManager.isSettingEnabled(.UseNativeDictionaries) ? NSControl.StateValue.onState : NSControl.StateValue.offState
     }

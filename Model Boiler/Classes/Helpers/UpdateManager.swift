@@ -12,29 +12,29 @@ import ZipArchive
 
 open class UpdateManager: NSObject {
 
-    static let sharedInstance = UpdateManager()
+    @objc static let sharedInstance = UpdateManager()
 
-    let repoPath     = "repos/nodes-ios/ModelBoiler/"
-    let downloadName = "Model.Boiler.app.zip"
+    @objc let repoPath     = "repos/nodes-ios/ModelBoiler/"
+    @objc let downloadName = "Model.Boiler.app.zip"
 
-    var updateTimer: Timer?
+    @objc var updateTimer: Timer?
     fileprivate override init() { }
 
-    open static func start() {
+    @objc open static func start() {
         sharedInstance.start()
     }
 
-    open func start() {
+    @objc open func start() {
         // Schedule update timer for every hour
         checkForUpdates()
         updateTimer = Timer.scheduledTimer(timeInterval: 3600, target: self, selector: #selector(UpdateManager.autoUpdateTimerFired), userInfo: nil, repeats: true)
     }
 
-    open static func stop() {
+    @objc open static func stop() {
         sharedInstance.stop()
     }
 
-    open func stop() {
+    @objc open func stop() {
         updateTimer?.invalidate()
         updateTimer = nil
     }
@@ -43,7 +43,7 @@ open class UpdateManager: NSObject {
         checkForUpdates(showAlerts: false)
     }
 
-    open func checkForUpdates(showAlerts: Bool = true) {
+    @objc open func checkForUpdates(showAlerts: Bool = true) {
         guard let request = URLRequest.requestForGithubWithPath(repoPath + "releases") else {
             return
         }
