@@ -34,9 +34,11 @@ struct Service {
         generatorSettings.onlyCreateInitializer = SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
         
         do {
-            // Try to generate the code
-            guard let bodies = try modelBodies(fromSource: source, generatorSettings: generatorSettings) else { throw ModelParserError.NoModelNameFound }
-            let code = extensionCode(fromBodies: bodies)
+            // Try to generate the code bodies
+            guard let extensions = try extensionBodies(fromSource: source, generatorSettings: generatorSettings) else { throw ModelParserError.NoModelNameFound }
+            
+            //Concatenate the extensions
+            let code = extensionCode(fromBodies: extensions)
             
             // Play success sound
             playSound(Service.successSound)
@@ -74,7 +76,7 @@ struct Service {
         return retVal
     }
     
-    static func modelBodies(fromSource source: String, generatorSettings:  ModelGeneratorSettings) throws -> [String]? {
+    static func extensionBodies(fromSource source: String, generatorSettings:  ModelGeneratorSettings) throws -> [String]? {
         if let codes = try codeStrings(fromSourceCode: source) {
             var retVal = [String]()
             var outerModelPrefix = ""
@@ -90,8 +92,6 @@ struct Service {
                         }
                         codeToParse.append(character)
                     }
-                    //For some reason this doesn't work in current Swift4???
-                    // codeToParse = codeToParse.insert(contentsOf: outerModelPrefix, at: codeToParse.startIndex(range.length))
                 }
                 let newCode = try ModelGenerator.modelCode(fromSourceCode: codeToParse, withSettings: generatorSettings)
                 retVal.append(newCode)
