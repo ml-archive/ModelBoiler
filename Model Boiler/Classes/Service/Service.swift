@@ -63,29 +63,32 @@ struct Service {
         }
     }
     
-    static func extensionCode(fromBodies bodies: [String]) -> String {
-        var bodiesMutating = bodies
-        var retVal = ""
-        if !bodies.isEmpty {
-            retVal = bodiesMutating.removeFirst()
+    static func playSound(_ sound: NSSound?) {
+        if !UserDefaults.standard.bool(forKey: "muteSound") {
+            sound?.play()
         }
-        for body in bodiesMutating {
-            retVal.append("\n\n\(body)")
-        }
-        
-        return retVal
     }
+}
+
+
+// MARK: String manipulation
+extension Service {
     
+    // Create extensions while taking into account parent Model
     static func extensionBodies(fromSource source: String, generatorSettings:  ModelGeneratorSettings) throws -> [String]? {
-        if let codes = try codeStrings(fromSourceCode: source) {
+        if let codes = try modelStrings(fromSourceCode: source) {
             var retVal = [String]()
             var outerModelPrefix = ""
             for (index, code) in codes.enumerated() {
                 var codeToParse = code
-                if index == 0, let outerName = modelName(fromSourceCode: codeToParse)?.0 {
+                // first object is parent -> Save parent name
+                if index == 0, let outerName = modelNameAndRange(fromSourceCode: codeToParse)?.0 {
                     outerModelPrefix = outerName + "."
-                } else if let range = modelName(fromSourceCode: codeToParse)?.1 {
+                } else if let range = modelNameAndRange(fromSourceCode: codeToParse)?.1 {
+                    
+                    // For embedded Models, add Parent Model prefix before model name
                     codeToParse = ""
+                    // TODO: When Swift 4 properly works: Replace the following code with String.insert(contentsOf: otherString, at: Index)
                     for (index, character) in code.enumerated() {
                         if index == range.lowerBound {
                             codeToParse.append(" \(outerModelPrefix)")
@@ -93,6 +96,7 @@ struct Service {
                         codeToParse.append(character)
                     }
                 }
+                // Add model string to return array
                 let newCode = try ModelGenerator.modelCode(fromSourceCode: codeToParse, withSettings: generatorSettings)
                 retVal.append(newCode)
             }
@@ -101,7 +105,7 @@ struct Service {
         return nil
     }
     
-    static func modelName(fromSourceCode code: String) -> (String, NSRange)? {
+    static func modelNameAndRange(fromSourceCode code: String) -> (String, NSRange)? {
         let range = NSMakeRange(0, code.characters.count)
         let match = modelNameRegex?.firstMatch(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
         
@@ -113,6 +117,8 @@ struct Service {
         return nil
     }
     
+    
+    // Adds end brackets to models extracted with only start brackets
     static func missingEndBrackets(inCode code: String) -> String {
         let startBrackets = code.components(separatedBy: "{").count - 1
         let endBrackets = code.components(separatedBy: "}").count - 1
@@ -128,68 +134,72 @@ struct Service {
         return addition
     }
     
-    static func codeStrings(fromSourceCode code: String) throws -> [String]? {
+    static func modelStrings(fromSourceCode code: String, regex: NSRegularExpression) throws -> [String]? {
         let range = NSMakeRange(0, code.characters.count)
         
-        // Check if struct
-        let structMatches = structRegex?.numberOfMatches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
-        if let matches = structMatches,
-            matches == 1 {
+        // Check for regex matches
+        let matches = regex.numberOfMatches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
+        if matches == 1 {
+            // In case just one match found, return this
+            return [code]
             
-            return [code + missingEndBrackets(inCode: code)]
+        } else if matches > 1 {
+            let allMatches = regex.matches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
             
-        } else if let matches = structMatches,
-            matches > 1,
-            let allMatches = structRegex?.matches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range) {
+            // If multiple matches found identify range up until the second occurance
             let rangeToRemove = NSMakeRange(0, allMatches[1].range.location)
+            // Extract first match
             let string = (code as NSString).substring(to: rangeToRemove.length) as String
+            // Get remaining range
             let restRange = NSMakeRange(rangeToRemove.length, range.length - rangeToRemove.length)
+            // Get remaining code
             let restCode = (code as NSString).substring(with: restRange) as String
             do {
-                
-                if let strings = try codeStrings(fromSourceCode: restCode) {
+                // Call recursively with rest code and return along with first found value
+                if let strings = try modelStrings(fromSourceCode: restCode) {
                     return [string + missingEndBrackets(inCode: string)] + strings
                 }
             }
         }
+        return nil
+    }
+    
+    //Extracts models
+    static func modelStrings(fromSourceCode code: String) throws -> [String]? {
         
-        //Check if final class
+        // Identify struct models
+        if let matches = try modelStrings(fromSourceCode: code, regex: structRegex!) {
+            return matches
+        }
         
-        let finalClassMatches = finalClassRegex?.numberOfMatches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
-        if let matches = finalClassMatches,
-            matches == 1 {
+        //Identify final class models
             
-            return [code + missingEndBrackets(inCode: code)]
-            
-        } else if let matches = finalClassMatches,
-            matches > 1,
-            let allMatches = finalClassRegex?.matches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range) {
-            let rangeToRemove = NSMakeRange(0, allMatches[1].range.location)
-            let string = (code as NSString).substring(to: rangeToRemove.length) as String
-            let restRange = NSMakeRange(rangeToRemove.length, range.length - rangeToRemove.length)
-            let restCode = (code as NSString).substring(with: restRange) as String
-            do {
-                
-                if let strings = try codeStrings(fromSourceCode: restCode) {
-                    return [string + missingEndBrackets(inCode: string)] + strings
-                }
-            }
-            
-        } else if code.contains("class") {
+        if let matches = try modelStrings(fromSourceCode: code, regex: finalClassRegex!) {
+            return matches
+        }
+        else if code.contains("class") {
             throw ModelParserError.ClassShouldBeDeclaredAsFinal
         }
         
         // If no struct or class was found
         return nil
     }
-    //
     
-    static func playSound(_ sound: NSSound?) {
-        if !UserDefaults.standard.bool(forKey: "muteSound") {
-            sound?.play()
+    //Concatenates all the generated extensions
+    static func extensionCode(fromBodies bodies: [String]) -> String {
+        var bodiesMutating = bodies
+        var retVal = ""
+        if !bodies.isEmpty {
+            retVal = bodiesMutating.removeFirst()
         }
+        for body in bodiesMutating {
+            retVal.append("\n\n\(body)")
+        }
+        
+        return retVal
     }
 }
+
 // Regular expression used for parsing
 extension Service {
     
