@@ -11,14 +11,14 @@ import ModelGenerator
 import Cocoa
 
 struct Service {
-
+    
     static let errorSound   = NSSound(named: NSSound.Name(rawValue: "Basso"))
     static let successSound = NSSound(named: NSSound.Name(rawValue: "Pop"))
-
-    // MARK: - Main Function -
-
-    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general) {
     
+    // MARK: - Main Function -
+    
+    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general) {
+        
         guard let source = pasteboard.string(forType: NSPasteboard.PasteboardType.string), (pasteboard.pasteboardItems?.count == 1) else {
             NSUserNotification.display(title: "No text selected",
                                        andMessage: "Nothing was found in the pasteboard.")
@@ -46,7 +46,7 @@ struct Service {
             // Copy back to pasteboard
             NSPasteboard.general.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             NSPasteboard.general.setString(code, forType: NSPasteboard.PasteboardType.string)
-
+            
             // Success, show notification
             NSUserNotification.display(
                 title: "Code generated",
@@ -143,21 +143,18 @@ extension Service {
             // In case just one match found, return this
             return [code]
             
-        } else if matches > 1 {
-            let allMatches = regex.matches(in: code, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: range)
+        } else if matches > 1, let innerMatch = embeddedModelBodyRegex?.firstMatchInString(string: code) {
             
-            // If multiple matches found identify range up until the second occurance
-            let rangeToRemove = NSMakeRange(0, allMatches[1].range.location)
-            // Extract first match
-            let string = (code as NSString).substring(to: rangeToRemove.length) as String
-            // Get remaining range
-            let restRange = NSMakeRange(rangeToRemove.length, range.length - rangeToRemove.length)
-            // Get remaining code
-            let restCode = (code as NSString).substring(with: restRange) as String
+            // Extract embedded model
+            let innerString = (code as NSString).substring(with: innerMatch.range)
+            // remove embedded model
+            let remainder = (code as NSString).replacingCharacters(in: innerMatch.range, with: "")
+            
             do {
                 // Call recursively with rest code and return along with first found value
-                if let strings = try modelStrings(fromSourceCode: restCode) {
-                    return [string + missingEndBrackets(inCode: string)] + strings
+                if let strings = try modelStrings(fromSourceCode: remainder) {
+                    let retVal =  strings + [innerString]
+                    return retVal
                 }
             }
         }
@@ -173,7 +170,7 @@ extension Service {
         }
         
         //Identify final class models
-            
+        
         if let matches = try modelStrings(fromSourceCode: code, regex: finalClassRegex!) {
             return matches
         }
@@ -202,6 +199,18 @@ extension Service {
 
 // Regular expression used for parsing
 extension Service {
+
+    static var embeddedModelBodyRegex: NSRegularExpression? {
+        do {
+            let regex = try NSRegularExpression(
+                pattern: "((?!^)(struct|final\\sclass)\\s\\w+\\s\\{[\\d\\S\\W]*?\\})",
+                options: NSRegularExpression.Options(rawValue: 0))
+            return regex
+        } catch {
+            print("Couldn't create model body regex.")
+            return nil
+        }
+    }
     
     static var modelBodyRegex: NSRegularExpression? {
         do {
