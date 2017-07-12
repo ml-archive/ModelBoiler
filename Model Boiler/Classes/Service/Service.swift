@@ -117,23 +117,6 @@ extension Service {
         return nil
     }
     
-    
-    // Adds end brackets to models extracted with only start brackets
-    static func missingEndBrackets(inCode code: String) -> String {
-        let startBrackets = code.components(separatedBy: "{").count - 1
-        let endBrackets = code.components(separatedBy: "}").count - 1
-        let difference = startBrackets - endBrackets
-        
-        var addition = ""
-        if difference > 0 {
-            
-            for _ in 0..<difference {
-                addition.append("}")
-            }
-        }
-        return addition
-    }
-    
     static func modelStrings(fromSourceCode code: String, regex: NSRegularExpression) throws -> [String]? {
         let range = NSMakeRange(0, code.characters.count)
         
