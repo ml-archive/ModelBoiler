@@ -44,9 +44,9 @@ autoreleasepool {
 
         // relaunch
         do {
-            try NSWorkspace.shared().launchApplication(
+            try NSWorkspace.shared.launchApplication(
                     at: bundleURL,
-                    options: NSWorkspaceLaunchOptions(rawValue: 0),
+                    options: NSWorkspace.LaunchOptions(rawValue: 0),
                     configuration: [:])
         } catch {
             print("Error relaunching")

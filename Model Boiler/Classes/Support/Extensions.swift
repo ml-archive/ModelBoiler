@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 
 extension NSUserNotification {
-    static func display(title: String, andMessage message: String) {
+    @objc static func display(title: String, andMessage message: String) {
         dispatch(background: false) {
             let notification             = NSUserNotification()
             notification.title           = title
@@ -21,19 +21,19 @@ extension NSUserNotification {
 }
 
 extension NSApplication {
-    func terminateAlreadyRunningInstances() {
+    @objc func terminateAlreadyRunningInstances() {
         guard let identifier = Bundle.main.bundleIdentifier else { return }
 
         // Terminate all previously running apps with same bundle identifier
         let runningApps = NSRunningApplication.runningApplications(withBundleIdentifier: identifier)
         for runningApp in runningApps {
-            if !runningApp.isEqual(NSRunningApplication.current()) {
+            if !runningApp.isEqual(NSRunningApplication.current) {
                 runningApp.terminate()
             }
         }
     }
 
-    func verifyAppInstallLocation() {
+    @objc func verifyAppInstallLocation() {
         if !isInApplications() && !isInBrewsFolder() {
 
             let alert = NSAlert()
@@ -43,7 +43,7 @@ extension NSApplication {
             alert.informativeText = "The app should be in your Applications folder in order to work properly."
             let response = alert.runModal()
 
-            if response == NSAlertFirstButtonReturn {
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
                 do {
                     try moveToApplicationsIfNecessary()
                     restart()
@@ -60,7 +60,7 @@ extension NSApplication {
         }
     }
 
-    func isInApplications() -> Bool {
+    @objc func isInApplications() -> Bool {
         let sourcePath = Bundle.main.bundlePath
         let appFolders = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .localDomainMask, true)
 
@@ -73,13 +73,13 @@ extension NSApplication {
         return sourcePath == expectedPath
     }
     
-    func isInBrewsFolder() -> Bool {
+    @objc func isInBrewsFolder() -> Bool {
         let sourcePath = Bundle.main.bundlePath
         
         return sourcePath.contains("homebrew-cask/Caskroom")
     }
 
-    func moveToApplicationsIfNecessary() throws {
+    @objc func moveToApplicationsIfNecessary() throws {
         if isInApplications() || isInBrewsFolder() { return }
 
         let bundle     = Bundle.main
@@ -100,7 +100,7 @@ extension NSApplication {
         try fileManager.moveItem(atPath: sourcePath, toPath: expectedPath)
     }
 
-    func restart() {
+    @objc func restart() {
         let task = Process()
         task.launchPath = Bundle.main.path(forResource: "relaunch", ofType: nil)!
         task.arguments = [String(ProcessInfo.processInfo.processIdentifier)]
@@ -121,7 +121,7 @@ extension URLRequest {
 }
 
 extension NSMenuItem {
-    static func separatorItemWithTag(_ tag: Int) -> NSMenuItem {
+    @objc static func separatorItemWithTag(_ tag: Int) -> NSMenuItem {
         let separatorItem = NSMenuItem.separator()
         separatorItem.tag = tag
         return separatorItem
@@ -129,7 +129,7 @@ extension NSMenuItem {
 }
 
 extension NSWindow {
-    func makeKeyFrontAndCenter(_ sender: AnyObject?) {
+    @objc func makeKeyFrontAndCenter(_ sender: AnyObject?) {
         makeKeyAndOrderFront(sender)
 
         if let screen = self.screen {

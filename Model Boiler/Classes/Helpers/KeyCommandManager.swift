@@ -14,7 +14,7 @@ struct KeyCommandManager {
 
     static func setDefaultKeyCommand() {
         let key  = "§"
-        let mask = NSEventModifierFlags.command
+        let mask = NSEvent.ModifierFlags.command
 
         do {
             try KeyCommandManager.updateKeyCommand(key, modifierMask: mask)
@@ -25,7 +25,7 @@ struct KeyCommandManager {
 
     // MARK: - Key Command -
 
-    static func currentKeyCommand() -> (command: String, modifierMask: NSEventModifierFlags)? {
+    static func currentKeyCommand() -> (command: String, modifierMask: NSEvent.ModifierFlags)? {
         if let keyCommandString = UserDefaults.standard.string(forKey: settingsKey) {
             return keyCommandForString(keyCommandString)
         }
@@ -33,7 +33,7 @@ struct KeyCommandManager {
         return nil
     }
 
-    static func updateKeyCommand(_ command: String, modifierMask: NSEventModifierFlags) throws {
+    static func updateKeyCommand(_ command: String, modifierMask: NSEvent.ModifierFlags) throws {
         let bundle = Bundle.main
 
         guard let appServices = (bundle.infoDictionary?["NSServices"] as AnyObject).firstObject as? [String: AnyObject],
@@ -81,7 +81,7 @@ struct KeyCommandManager {
 
     // MARK: - Helpers -
 
-    static func stringForKeyCommand(_ command: String, modifierMask: NSEventModifierFlags) -> String {
+    static func stringForKeyCommand(_ command: String, modifierMask: NSEvent.ModifierFlags) -> String {
         var key = ""
 
         if modifierMask.contains(.command) { key += "@" }
@@ -92,8 +92,8 @@ struct KeyCommandManager {
     }
 
 
-    static func keyCommandForString(_ string: String) -> (command: String, modifierMask: NSEventModifierFlags) {
-        var returnValue = (command: "", modifierMask: NSEventModifierFlags(rawValue: 0))
+    static func keyCommandForString(_ string: String) -> (command: String, modifierMask: NSEvent.ModifierFlags) {
+        var returnValue = (command: "", modifierMask: NSEvent.ModifierFlags(rawValue: 0))
         if string.characters.count == 0 { return returnValue }
 
         switch string.characters.first! {
