@@ -139,7 +139,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     // MARK: - Callbacks -
 
-    func generate(_ pboard:NSPasteboard!, userData:NSString!, error:AutoreleasingUnsafeMutablePointer<NSString?>) -> Void {
+    @objc func generate(_ pboard:NSPasteboard!, userData:NSString!, error:AutoreleasingUnsafeMutablePointer<NSString?>) -> Void {
         Service.generate(pboard)
     }
 
