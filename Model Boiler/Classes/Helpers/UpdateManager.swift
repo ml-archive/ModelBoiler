@@ -20,7 +20,7 @@ open class UpdateManager: NSObject {
     var updateTimer: Timer?
     fileprivate override init() { }
 
-    open static func start() {
+    public static func start() {
         sharedInstance.start()
     }
 
@@ -30,7 +30,7 @@ open class UpdateManager: NSObject {
         updateTimer = Timer.scheduledTimer(timeInterval: 3600, target: self, selector: #selector(UpdateManager.autoUpdateTimerFired), userInfo: nil, repeats: true)
     }
 
-    open static func stop() {
+    public static func stop() {
         sharedInstance.stop()
     }
 
@@ -39,7 +39,7 @@ open class UpdateManager: NSObject {
         updateTimer = nil
     }
 
-    func autoUpdateTimerFired() {
+    @objc func autoUpdateTimerFired() {
         checkForUpdates(showAlerts: false)
     }
 

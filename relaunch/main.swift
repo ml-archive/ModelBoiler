@@ -41,15 +41,22 @@ autoreleasepool {
         app.terminate()
         CFRunLoopRun() // wait KVO notification
         app.removeObserver(listener, forKeyPath: "isTerminated", context: nil)
+        
+        // Helper function inserted by Swift 4.2 migrator.
+        func convertToNSWorkspaceLaunchConfigurationKeyDictionary(_ input: [String: Any]) -> [NSWorkspace.LaunchConfigurationKey: Any] {
+            return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSWorkspace.LaunchConfigurationKey(rawValue: key), value)})
+        }
 
         // relaunch
         do {
-            try NSWorkspace.shared().launchApplication(
+            try NSWorkspace.shared.launchApplication(
                     at: bundleURL,
-                    options: NSWorkspaceLaunchOptions(rawValue: 0),
-                    configuration: [:])
+                    options: NSWorkspace.LaunchOptions(rawValue: 0),
+                    configuration: convertToNSWorkspaceLaunchConfigurationKeyDictionary([:]))
         } catch {
             print("Error relaunching")
         }
     }
 }
+
+

@@ -17,9 +17,9 @@ struct Service {
 
     // MARK: - Main Function -
 
-    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general()) {
+    static func generate(_ pasteboard: NSPasteboard = NSPasteboard.general) {
 
-        guard let source = pasteboard.string(forType: NSPasteboardTypeString), (pasteboard.pasteboardItems?.count == 1) else {
+        guard let source = pasteboard.string(forType: NSPasteboard.PasteboardType.string), (pasteboard.pasteboardItems?.count == 1) else {
             NSUserNotification.display(title: "No text selected",
                 andMessage: "Nothing was found in the pasteboard.")
             playSound(Service.errorSound)
@@ -41,8 +41,8 @@ struct Service {
             playSound(Service.successSound)
 
             // Copy back to pasteboard
-            NSPasteboard.general().declareTypes([NSPasteboardTypeString], owner: nil)
-            NSPasteboard.general().setString(code, forType: NSPasteboardTypeString)
+            NSPasteboard.general.declareTypes(convertToNSPasteboardPasteboardTypeArray([convertFromNSPasteboardPasteboardType(NSPasteboard.PasteboardType.string)]), owner: nil)
+            NSPasteboard.general.setString(code, forType: NSPasteboard.PasteboardType.string)
 
             // Success, show notification
             NSUserNotification.display(
@@ -67,4 +67,14 @@ struct Service {
             sound?.play()
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSPasteboardPasteboardTypeArray(_ input: [String]) -> [NSPasteboard.PasteboardType] {
+	return input.map { key in NSPasteboard.PasteboardType(key) }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSPasteboardPasteboardType(_ input: NSPasteboard.PasteboardType) -> String {
+	return input.rawValue
 }
