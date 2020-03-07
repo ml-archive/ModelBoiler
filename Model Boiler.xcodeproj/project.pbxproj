@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,8 +11,6 @@
 		01582B281C58BAFB0058874C /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01582B271C58BAFB0058874C /* StatusBarController.swift */; };
 		01B0B75C1C57D4C6007C5BDA /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01B0B7581C57D4B5007C5BDA /* ZipArchive.framework */; };
 		01B0B75D1C57D4C6007C5BDA /* ZipArchive.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 01B0B7581C57D4B5007C5BDA /* ZipArchive.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		01B0B75E1C57D4C6007C5BDA /* ModelGenerator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0169B8D31C5684EB00ADF94F /* ModelGenerator.framework */; };
-		01B0B75F1C57D4C6007C5BDA /* ModelGenerator.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0169B8D31C5684EB00ADF94F /* ModelGenerator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		01B0B76A1C57D62C007C5BDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B0B7611C57D62C007C5BDA /* AppDelegate.swift */; };
 		01B0B76E1C57D62C007C5BDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01B0B7661C57D62C007C5BDA /* Assets.xcassets */; };
 		01B0B76F1C57D62C007C5BDA /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B0B7671C57D62C007C5BDA /* Preferences.xib */; };
@@ -27,6 +25,8 @@
 		3025CF541B8E71FD004F911C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3025CF531B8E71FD004F911C /* libz.tbd */; };
 		30A380861B8D0DC100EE755F /* MASShortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30A380841B8D0DC100EE755F /* MASShortcut.framework */; };
 		30A380891B8D0E6A00EE755F /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 30A380841B8D0DC100EE755F /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BDFF75B72412A86900F8BCD4 /* SwiftSyntax in Frameworks */ = {isa = PBXBuildFile; productRef = BDFF75B62412A86900F8BCD4 /* SwiftSyntax */; };
+		BDFF75BA2412A89300F8BCD4 /* SwiftSemantics in Frameworks */ = {isa = PBXBuildFile; productRef = BDFF75B92412A89300F8BCD4 /* SwiftSemantics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +55,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				01B0B75F1C57D4C6007C5BDA /* ModelGenerator.framework in Embed Frameworks */,
 				30A380891B8D0E6A00EE755F /* MASShortcut.framework in Embed Frameworks */,
 				01B0B75D1C57D4C6007C5BDA /* ZipArchive.framework in Embed Frameworks */,
 			);
@@ -67,7 +66,6 @@
 /* Begin PBXFileReference section */
 		01582B251C58BA520058874C /* KeyCommandManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCommandManager.swift; sourceTree = "<group>"; };
 		01582B271C58BAFB0058874C /* StatusBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
-		0169B8D31C5684EB00ADF94F /* ModelGenerator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelGenerator.framework; path = Carthage/Build/Mac/ModelGenerator.framework; sourceTree = "<group>"; };
 		01B0B7581C57D4B5007C5BDA /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = Carthage/Build/Mac/ZipArchive.framework; sourceTree = "<group>"; };
 		01B0B7611C57D62C007C5BDA /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		01B0B7661C57D62C007C5BDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -98,10 +96,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01B0B75E1C57D4C6007C5BDA /* ModelGenerator.framework in Frameworks */,
 				01B0B75C1C57D4C6007C5BDA /* ZipArchive.framework in Frameworks */,
 				3025CF541B8E71FD004F911C /* libz.tbd in Frameworks */,
 				30A380861B8D0DC100EE755F /* MASShortcut.framework in Frameworks */,
+				BDFF75B72412A86900F8BCD4 /* SwiftSyntax in Frameworks */,
+				BDFF75BA2412A89300F8BCD4 /* SwiftSemantics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,7 +185,6 @@
 			isa = PBXGroup;
 			children = (
 				01B0B7581C57D4B5007C5BDA /* ZipArchive.framework */,
-				0169B8D31C5684EB00ADF94F /* ModelGenerator.framework */,
 				30A380841B8D0DC100EE755F /* MASShortcut.framework */,
 				3025CF531B8E71FD004F911C /* libz.tbd */,
 			);
@@ -257,6 +255,10 @@
 				01ECF1091C43FF5D00C23397 /* PBXTargetDependency */,
 			);
 			name = "Model Boiler";
+			packageProductDependencies = (
+				BDFF75B62412A86900F8BCD4 /* SwiftSyntax */,
+				BDFF75B92412A89300F8BCD4 /* SwiftSemantics */,
+			);
 			productName = "Model Boiler";
 			productReference = 3092679C1B77EBE700DFE5A1 /* Model Boiler.app */;
 			productType = "com.apple.product-type.application";
@@ -268,28 +270,32 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Nodes;
 				TargetAttributes = {
 					01ECF0FF1C43FDD700C23397 = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1130;
 					};
 					3092679B1B77EBE700DFE5A1 = {
 						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
 			buildConfigurationList = 309267971B77EBE700DFE5A1 /* Build configuration list for PBXProject "Model Boiler" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
 			mainGroup = 309267931B77EBE700DFE5A1;
+			packageReferences = (
+				BDFF75B52412A86900F8BCD4 /* XCRemoteSwiftPackageReference "swift-syntax" */,
+				BDFF75B82412A89300F8BCD4 /* XCRemoteSwiftPackageReference "SwiftSemantics" */,
+			);
 			productRefGroup = 3092679D1B77EBE700DFE5A1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -352,16 +358,18 @@
 		01ECF1041C43FDD700C23397 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 		01ECF1051C43FDD700C23397 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -372,7 +380,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -380,6 +388,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -418,7 +427,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
@@ -431,23 +440,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = M92A6H7EPZ;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Model Boiler/Supporting Files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nodes.Model-Boiler";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -455,6 +471,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -491,11 +508,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_SWIFT_FLAGS = "-DRELEASE";
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -503,23 +521,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = M92A6H7EPZ;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Model Boiler/Supporting Files/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.nodes.Model-Boiler";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -554,6 +579,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BDFF75B52412A86900F8BCD4 /* XCRemoteSwiftPackageReference "swift-syntax" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:apple/swift-syntax.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.50100.0;
+			};
+		};
+		BDFF75B82412A89300F8BCD4 /* XCRemoteSwiftPackageReference "SwiftSemantics" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:SwiftDocOrg/SwiftSemantics.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDFF75B62412A86900F8BCD4 /* SwiftSyntax */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDFF75B52412A86900F8BCD4 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftSyntax;
+		};
+		BDFF75B92412A89300F8BCD4 /* SwiftSemantics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDFF75B82412A89300F8BCD4 /* XCRemoteSwiftPackageReference "SwiftSemantics" */;
+			productName = SwiftSemantics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 309267941B77EBE700DFE5A1 /* Project object */;
 }

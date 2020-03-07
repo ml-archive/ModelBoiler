@@ -35,14 +35,14 @@ class PreferencesController: NSWindowController {
             let scalars = keyCommand.command.unicodeScalars
             let keyCode = UInt(scalars[scalars.startIndex].value)
 
-            let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: keyCommand.modifierMask.rawValue)
+            let shortcut = MASShortcut(keyCode: Int(keyCode), modifierFlags: NSEvent.ModifierFlags(rawValue: keyCommand.modifierMask.rawValue))
             shortcutView.shortcutValue = shortcut
         }
     }
 
     func updateServiceKeyCommand() {
         let keyCode  = self.shortcutView.shortcutValue.keyCodeString
-        let modifier = NSEvent.ModifierFlags(rawValue: self.shortcutView.shortcutValue.modifierFlags)
+        let modifier = NSEvent.ModifierFlags(rawValue: self.shortcutView.shortcutValue!.modifierFlags.rawValue)
         guard let code = keyCode else {
             loadSavedKeyCommand()
             return
