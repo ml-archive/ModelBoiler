@@ -248,10 +248,13 @@
 				309267991B77EBE700DFE5A1 /* Frameworks */,
 				3092679A1B77EBE700DFE5A1 /* Resources */,
 				30A3808A1B8D0E6A00EE755F /* Embed Frameworks */,
+				BD07E6A024165D130003C21C /* Link to SwiftSyntax */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BD271AED2416492A0042D5C2 /* PBXTargetDependency */,
+				BD271AEF2416492A0042D5C2 /* PBXTargetDependency */,
 				01ECF1091C43FF5D00C23397 /* PBXTargetDependency */,
 			);
 			name = "Model Boiler";
@@ -320,6 +323,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		BD07E6A024165D130003C21C /* Link to SwiftSyntax */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Link to SwiftSyntax";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ln -sfn  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/lib_InternalSwiftSyntaxParser.dylib ${BUILT_PRODUCTS_DIR}/${APPLICATION_NAME}\"Model Boiler.app/Contents/Frameworks\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		01ECF0FC1C43FDD700C23397 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -351,6 +375,14 @@
 			isa = PBXTargetDependency;
 			target = 01ECF0FF1C43FDD700C23397 /* relaunch */;
 			targetProxy = 01ECF1081C43FF5D00C23397 /* PBXContainerItemProxy */;
+		};
+		BD271AED2416492A0042D5C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = BD271AEC2416492A0042D5C2 /* SwiftSyntax */;
+		};
+		BD271AEF2416492A0042D5C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = BD271AEE2416492A0042D5C2 /* SwiftSemantics */;
 		};
 /* End PBXTargetDependency section */
 
@@ -600,6 +632,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BD271AEC2416492A0042D5C2 /* SwiftSyntax */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDFF75B52412A86900F8BCD4 /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftSyntax;
+		};
+		BD271AEE2416492A0042D5C2 /* SwiftSemantics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDFF75B82412A89300F8BCD4 /* XCRemoteSwiftPackageReference "SwiftSemantics" */;
+			productName = SwiftSemantics;
+		};
 		BDFF75B62412A86900F8BCD4 /* SwiftSyntax */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BDFF75B52412A86900F8BCD4 /* XCRemoteSwiftPackageReference "swift-syntax" */;

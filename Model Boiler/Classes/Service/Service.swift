@@ -12,7 +12,7 @@ import SwiftSyntax
 import SwiftSemantics
 
 class Generator {
-    
+
     let source: String
     
     init(source: String) {
