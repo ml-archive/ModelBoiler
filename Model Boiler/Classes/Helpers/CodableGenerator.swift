@@ -38,7 +38,7 @@ class Generator {
     func addNode(name: String, type: String, isOptional: Bool = false) {
         encode.append("    try container.encode(\(name), forKey: .\(name))")
         if isOptional {
-            initStrings.append("    \(name) = try container.decodeIfPresent(\(type).self, forKey: .\(name))")
+            initStrings.append("    \(name) = try container.decodeIfPresent(\(type.trimmingCharacters(in: .init(charactersIn: "?"))).self, forKey: .\(name))")
         } else {
             initStrings.append("    \(name) = try container.decode(\(type).self, forKey: .\(name))")
         }
