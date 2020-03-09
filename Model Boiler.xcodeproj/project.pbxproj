@@ -25,6 +25,7 @@
 		3025CF541B8E71FD004F911C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3025CF531B8E71FD004F911C /* libz.tbd */; };
 		30A380861B8D0DC100EE755F /* MASShortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30A380841B8D0DC100EE755F /* MASShortcut.framework */; };
 		30A380891B8D0E6A00EE755F /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 30A380841B8D0DC100EE755F /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD07E6AD241662C00003C21C /* CodableGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD07E6AC241662C00003C21C /* CodableGenerator.swift */; };
 		BDFF75B72412A86900F8BCD4 /* SwiftSyntax in Frameworks */ = {isa = PBXBuildFile; productRef = BDFF75B62412A86900F8BCD4 /* SwiftSyntax */; };
 		BDFF75BA2412A89300F8BCD4 /* SwiftSemantics in Frameworks */ = {isa = PBXBuildFile; productRef = BDFF75B92412A89300F8BCD4 /* SwiftSemantics */; };
 /* End PBXBuildFile section */
@@ -82,6 +83,7 @@
 		3025CF531B8E71FD004F911C /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		3092679C1B77EBE700DFE5A1 /* Model Boiler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Model Boiler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A380841B8D0DC100EE755F /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
+		BD07E6AC241662C00003C21C /* CodableGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 				01B0B7721C57D658007C5BDA /* UpdateManager.swift */,
 				01B0B77A1C57D72B007C5BDA /* SettingsManager.swift */,
 				01582B251C58BA520058874C /* KeyCommandManager.swift */,
+				BD07E6AC241662C00003C21C /* CodableGenerator.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				01582B261C58BA520058874C /* KeyCommandManager.swift in Sources */,
 				01582B281C58BAFB0058874C /* StatusBarController.swift in Sources */,
 				01B0B7801C57D80E007C5BDA /* PreferencesController.swift in Sources */,
+				BD07E6AD241662C00003C21C /* CodableGenerator.swift in Sources */,
 				01B0B7771C57D658007C5BDA /* UpdateManager.swift in Sources */,
 				01B0B77B1C57D72B007C5BDA /* SettingsManager.swift in Sources */,
 				01B0B76A1C57D62C007C5BDA /* AppDelegate.swift in Sources */,
