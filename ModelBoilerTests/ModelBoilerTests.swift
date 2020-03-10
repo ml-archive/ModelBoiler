@@ -10,26 +10,26 @@ import XCTest
 @testable import Model_Boiler
 
 class ModelBoilerTests: XCTestCase {
-    
+
     func testParsing() throws {
         struct TestStruct: Codable, Equatable {
             init(
                 string: String,
                 optionalString: String?,
-                dictionary: [String : Int],
-                optionalDictionary: [String : Int]?
+                dictionary: [String: Int],
+                optionalDictionary: [String: Int]?
             ) {
                 self.string = string
                 self.optionalString = optionalString
                 self.dictionary = dictionary
                 self.optionalDictionary = optionalDictionary
             }
-            
+
             let string: String
             let optionalString: String?
             let dictionary: [String: Int]
             let optionalDictionary: [String: Int]?
-            
+
             enum CodingKeys: String, CodingKey {
                 case string = "string"
                 case optionalString = "optionalString"
@@ -51,7 +51,7 @@ class ModelBoilerTests: XCTestCase {
                 optionalDictionary = try container.decodeIfPresent([String: Int].self, forKey: .optionalDictionary)
             }
         }
-        
+
         do {
             let str = """
         {
@@ -59,14 +59,14 @@ class ModelBoilerTests: XCTestCase {
             "dictionary": { "Test": 1 }
         }
         """
-            
+
             let test = try JSONDecoder().decode(TestStruct.self, from: str.data(using: .utf8)!)
-            
+
             let compare = TestStruct(string: "Test", optionalString: nil, dictionary: ["Test": 1], optionalDictionary: nil)
-            
+
             XCTAssertEqual(test, compare)
         }
-        
+
         let str = """
                {
                    "string": "Test",
@@ -75,36 +75,36 @@ class ModelBoilerTests: XCTestCase {
                     "optionalString": "MyOptional"
                }
                """
-        
+
         let test = try JSONDecoder().decode(TestStruct.self, from: str.data(using: .utf8)!)
-        
+
         let compare = TestStruct(string: "Test", optionalString: "MyOptional", dictionary: ["Test": 1], optionalDictionary: ["Test": 2])
-        
+
         XCTAssertEqual(test, compare)
-        
+
     }
-    
+
     func testEmbedded() {
         struct TestStruct: Codable, Equatable {
             init(
                 string: String,
                 optionalString: String?,
-                dictionary: [String : Int],
-                optionalDictionary: [String : Int]?
+                dictionary: [String: Int],
+                optionalDictionary: [String: Int]?
             ) {
                 self.string = string
                 self.optionalString = optionalString
                 self.dictionary = dictionary
                 self.optionalDictionary = optionalDictionary
             }
-            
+
             let string: String
             let optionalString: String?
             let dictionary: [String: Int]
             let optionalDictionary: [String: Int]?
         }
     }
-    
+
     func testTypeInference() throws {
         let str = """
         struct Test {
@@ -116,7 +116,7 @@ class ModelBoilerTests: XCTestCase {
             var boolVal = true
         }
         """
-        
+
         let expected = """
         enum CodingKeys: String, CodingKey {
             case custom = "custom"
@@ -150,9 +150,9 @@ class ModelBoilerTests: XCTestCase {
         let res = try XCTUnwrap(try Generator(source: str).generate())
         XCTAssertEqual(res, expected)
     }
-    
+
     func testCamelCaseToUnderscore() throws {
-        
+
         let str = """
         struct Test {
             var intVal = 1
@@ -162,7 +162,7 @@ class ModelBoilerTests: XCTestCase {
             var imageURL: URL
         }
         """
-        
+
         let expected = """
         enum CodingKeys: String, CodingKey {
             case intVal = "int_val"
@@ -190,8 +190,8 @@ class ModelBoilerTests: XCTestCase {
             imageURL = try container.decode(URL.self, forKey: .imageURL)
         }
         """
-        
+
         let res = try XCTUnwrap(try Generator(source: str, mapUnderscoreToCamelCase: true).generate())
-               XCTAssertEqual(res, expected)
+        XCTAssertEqual(res, expected)
     }
 }

@@ -41,7 +41,7 @@ struct KeyCommandManager {
             let serviceName = appServices["NSMenuItem"]?["default"] as? String,
             let methodName = appServices["NSMessage"] as? String else {
 
-                throw NSError(domain: "com.nodes.Model-Boiler", code: 1000, userInfo: [NSLocalizedDescriptionKey : "Can't get information about app services."])
+                throw NSError(domain: "com.nodes.Model-Boiler", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Can't get information about app services."])
         }
 
         let serviceHelperName = "pbs"
@@ -55,9 +55,9 @@ struct KeyCommandManager {
         NSUpdateDynamicServices()
 
         let serviceStatus: [String: AnyObject] = [
-            "enabled_context_menu" : true as AnyObject,
-            "enabled_services_menu" : true as AnyObject,
-            "key_equivalent" : keyCommand as AnyObject]
+            "enabled_context_menu": true as AnyObject,
+            "enabled_services_menu": true as AnyObject,
+            "key_equivalent": keyCommand as AnyObject]
 
         services[serviceStatusName] = serviceStatus as AnyObject?
 
@@ -75,7 +75,7 @@ struct KeyCommandManager {
 
             UserDefaults.standard.set(keyCommand, forKey: settingsKey)
         } else {
-            throw NSError(domain: bundleIdentifier, code: 1000, userInfo: [NSLocalizedDescriptionKey : "Can't save key command for service."])
+            throw NSError(domain: bundleIdentifier, code: 1000, userInfo: [NSLocalizedDescriptionKey: "Can't save key command for service."])
         }
     }
 
@@ -90,7 +90,6 @@ struct KeyCommandManager {
 
         return key + (command == "$" ? "\\$" : command)
     }
-
 
     static func keyCommandForString(_ string: String) -> (command: String, modifierMask: NSEvent.ModifierFlags) {
         var returnValue = (command: "", modifierMask: NSEvent.ModifierFlags(rawValue: 0))

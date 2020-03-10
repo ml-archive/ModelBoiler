@@ -17,11 +17,10 @@ class Observer: NSObject {
         _callback = callback
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         _callback()
     }
 }
-
 
 // main
 autoreleasepool {
@@ -41,7 +40,7 @@ autoreleasepool {
         app.terminate()
         CFRunLoopRun() // wait KVO notification
         app.removeObserver(listener, forKeyPath: "isTerminated", context: nil)
-        
+
         // Helper function inserted by Swift 4.2 migrator.
         func convertToNSWorkspaceLaunchConfigurationKeyDictionary(_ input: [String: Any]) -> [NSWorkspace.LaunchConfigurationKey: Any] {
             return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSWorkspace.LaunchConfigurationKey(rawValue: key), value)})
@@ -50,13 +49,11 @@ autoreleasepool {
         // relaunch
         do {
             try NSWorkspace.shared.launchApplication(
-                    at: bundleURL,
-                    options: NSWorkspace.LaunchOptions(rawValue: 0),
-                    configuration: convertToNSWorkspaceLaunchConfigurationKeyDictionary([:]))
+                at: bundleURL,
+                options: NSWorkspace.LaunchOptions(rawValue: 0),
+                configuration: convertToNSWorkspaceLaunchConfigurationKeyDictionary([:]))
         } catch {
             print("Error relaunching")
         }
     }
 }
-
-

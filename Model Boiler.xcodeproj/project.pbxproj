@@ -279,6 +279,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 309267AB1B77EBE700DFE5A1 /* Build configuration list for PBXNativeTarget "Model Boiler" */;
 			buildPhases = (
+				BDD666282417EBA3001BD614 /* ShellScript */,
 				309267981B77EBE700DFE5A1 /* Sources */,
 				309267991B77EBE700DFE5A1 /* Frameworks */,
 				3092679A1B77EBE700DFE5A1 /* Resources */,
@@ -404,6 +405,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "ln -sfn  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/lib_InternalSwiftSyntaxParser.dylib ${BUILT_PRODUCTS_DIR}/${APPLICATION_NAME}\"Model Boiler.app/Contents/Frameworks\"\n";
+		};
+		BDD666282417EBA3001BD614 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint autocorrect --format\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -66,7 +66,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
         let optionsItem = NSMenuItem( title: "Options", action: nil, keyEquivalent: "")
         statusMenu.addItem(optionsItem)
         statusMenu.setSubmenu(optionsMenu, for: optionsItem)
-        
+
         // Camel case conversion item
         let camelCaseItem    = NSMenuItem(title: "Map camelCase -> underscore_notation", action: #selector(toggleCamelCaseConversion), keyEquivalent: "")
         camelCaseItem.state  = SettingsManager.isSettingEnabled(.NoCamelCaseConversion) ? .off : .on
@@ -80,17 +80,17 @@ class StatusBarController: NSObject, NSMenuDelegate {
         soundItem.target = self
         soundItem.tag    = MenuItem.soundEnabled.rawValue
         optionsMenu.addItem(soundItem)
-        
+
         // Generate Initializer only
         let initializerOnlyItem    = NSMenuItem(title: "Only generate initializer (useful for use with Realm/CoreData)", action: #selector(toggleOnlyCreateInitializers), keyEquivalent: "")
         initializerOnlyItem.state  = SettingsManager.isSettingEnabled(.OnlyCreateInitializer) ? .on : .off
         initializerOnlyItem.target = self
         initializerOnlyItem.tag    = MenuItem.onlyCreateInitializer.rawValue
         optionsMenu.addItem(initializerOnlyItem)
-        
+
         // Separator
         statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.separator.rawValue))
-        
+
         // Preferences item
         let preferencesItem = NSMenuItem(title: "Settings", action: #selector(StatusBarController.showSettings), keyEquivalent: "")
         preferencesItem.target = self
@@ -139,7 +139,7 @@ class StatusBarController: NSObject, NSMenuDelegate {
 
     // MARK: - Callbacks -
 
-    @objc func generate(_ pboard:NSPasteboard!, userData:NSString!, error:AutoreleasingUnsafeMutablePointer<NSString?>) -> Void {
+    @objc func generate(_ pboard: NSPasteboard!, userData: NSString!, error: AutoreleasingUnsafeMutablePointer<NSString?>) {
         Service.generate(pboard)
     }
 
@@ -164,16 +164,16 @@ class StatusBarController: NSObject, NSMenuDelegate {
             camelCaseItem.state = newState == true ? .off : .on
         }
     }
-    
+
     @objc func toggleOnlyCreateInitializers() {
         let newState = !SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
         SettingsManager.setSetting(.OnlyCreateInitializer, enabled: newState)
-        
+
         if let camelCaseItem = optionsMenu.item(withTag: MenuItem.onlyCreateInitializer.rawValue) {
             camelCaseItem.state = newState == true ? .on : .off
         }
     }
-    
+
     @objc func showSettings() {
         preferencesController = PreferencesController.newFromNib()
         preferencesController?.window?.makeKeyFrontAndCenter(self)

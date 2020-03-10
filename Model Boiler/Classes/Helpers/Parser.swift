@@ -13,7 +13,7 @@ struct Parser<A> {
 }
 
 extension Parser where A == String {
-    
+
     static func predicate(_ predicate: @escaping (Character) -> Bool) -> Parser {
         Parser { str in
             let match = str.prefix(while: predicate)
@@ -22,12 +22,12 @@ extension Parser where A == String {
             return String(match)
         }
     }
-    
+
     static let upper: Parser = .predicate { $0.isUppercase }
-    
+
     static let lower: Parser = .predicate { $0.isLowercase }
-    
-    static var wordParser: Parser<String> {
+
+    static var word: Parser<String> {
         Parser { str in
             if let lowerMatch = Parser.lower.run(&str) {
                 return lowerMatch

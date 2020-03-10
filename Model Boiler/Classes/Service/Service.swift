@@ -20,19 +20,18 @@ struct Service {
 
         guard let source = pasteboard.string(forType: NSPasteboard.PasteboardType.string), (pasteboard.pasteboardItems?.count == 1) else {
             NSUserNotification.display(title: "No text selected",
-                andMessage: "Nothing was found in the pasteboard.")
+                                       andMessage: "Nothing was found in the pasteboard.")
             playSound(Service.errorSound)
             return
         }
-        
 
         // Setup the model generator
-//        var generatorSettings = ModelGeneratorSettings()
-//        generatorSettings.moduleName = nil
-//        generatorSettings.noConvertCamelCase = SettingsManager.isSettingEnabled(.NoCamelCaseConversion)
-//        generatorSettings.useNativeDictionaries = SettingsManager.isSettingEnabled(.UseNativeDictionaries)
-//        generatorSettings.onlyCreateInitializer = SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
-//        
+        //        var generatorSettings = ModelGeneratorSettings()
+        //        generatorSettings.moduleName = nil
+        //        generatorSettings.noConvertCamelCase = SettingsManager.isSettingEnabled(.NoCamelCaseConversion)
+        //        generatorSettings.useNativeDictionaries = SettingsManager.isSettingEnabled(.UseNativeDictionaries)
+        //        generatorSettings.onlyCreateInitializer = SettingsManager.isSettingEnabled(.OnlyCreateInitializer)
+        //
         do {
             // Try to generate the code
             let code = try Generator(source: source, mapUnderscoreToCamelCase: !SettingsManager.isSettingEnabled(.NoCamelCaseConversion)).generate()
@@ -41,7 +40,7 @@ struct Service {
             playSound(Service.successSound)
 
             // Copy back to pasteboard
-            
+
             NSPasteboard.general.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             NSPasteboard.general.setString(code, forType: NSPasteboard.PasteboardType.string)
 

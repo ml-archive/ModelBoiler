@@ -72,10 +72,10 @@ extension NSApplication {
 
         return sourcePath == expectedPath
     }
-    
+
     func isInBrewsFolder() -> Bool {
         let sourcePath = Bundle.main.bundlePath
-        
+
         return sourcePath.contains("homebrew-cask/Caskroom")
     }
 
@@ -87,7 +87,7 @@ extension NSApplication {
         let appFolders = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .localDomainMask, true)
 
         guard let folder = appFolders.first, let appName = sourcePath.components(separatedBy: "/").last else {
-            throw NSError(domain: bundle.bundleIdentifier ?? "", code: 1000, userInfo: [NSLocalizedDescriptionKey : "Applications folder not found."])
+            throw NSError(domain: bundle.bundleIdentifier ?? "", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Applications folder not found."])
         }
 
         let expectedPath = folder + "/" + appName
@@ -139,7 +139,7 @@ extension NSWindow {
             let xPos = screenFrame.width / 2 - windowFrame.width / 2
             let yPos = screenFrame.height / 2 - windowFrame.height / 2
 
-            setFrame(NSMakeRect(xPos, yPos, windowFrame.size.width, windowFrame.size.height), display: true)
+            setFrame(NSRect(x: xPos, y: yPos, width: windowFrame.size.width, height: windowFrame.size.height), display: true)
         }
     }
 }
@@ -169,6 +169,6 @@ func dispatch(background: Bool = false, closure: @escaping () -> Void) {
 func delay(_ delay: Int64, closure: @escaping () -> Void) {
     DispatchQueue.main.asyncAfter(
         deadline: DispatchTime.now() + Double(delay * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: {
-        closure()
+            closure()
     })
 }
