@@ -56,23 +56,11 @@ class Generator {
         var res = ""
 
         var strCopy = string[...]
-        while let match = parseWord(str: &strCopy) {
-            res += "_" + match.lowercased()
+        while let match = Parser.wordParser.map({ $0.lowercased() }).run(&strCopy) {
+            res += "_" + match
         }
         return res.trimmingCharacters(in: CharacterSet.init(charactersIn: "_"))
     }
-    
-    func parseWord(str: inout Substring) -> String? {
-        
-        if let lowerMatch = Parser.lower.run(&str) {
-            return lowerMatch
-        }
-        if let upperThenLower = zip(Parser.upper, Parser.lower).run(&str) {
-            return upperThenLower.0 + upperThenLower.1
-        }
-        return Parser.upper.run(&str)
-    }
-    
     /// Generation is based on dumb pattern matchint
       func generate() throws -> String {
           var collector = DeclarationCollector()
@@ -128,6 +116,29 @@ extension Parser where A == String {
     static let upper: Parser = .predicate { $0.isUppercase }
     
     static let lower: Parser = .predicate { $0.isLowercase }
+    
+    static var wordParser: Parser<String> {
+        Parser { str in
+            if let lowerMatch = Parser.lower.run(&str) {
+                return lowerMatch
+            }
+            if let upperThenLower = zip(Parser.upper, Parser.lower).run(&str) {
+                return upperThenLower.0 + upperThenLower.1
+            }
+            return Parser.upper.run(&str)
+        }
+    }
+}
+
+extension Parser {
+    func map<B>(_ f: @escaping (A) -> B) -> Parser<B> {
+        Parser<B> { str in
+            guard let match = self.run(&str) else {
+                return nil
+            }
+            return f(match)
+        }
+    }
 }
 
 func zip<A, B>(_ pa: Parser<A>, _ pb: Parser<B>) -> Parser<(A, B)> {
