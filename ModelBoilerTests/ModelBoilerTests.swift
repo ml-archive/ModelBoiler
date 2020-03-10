@@ -150,4 +150,48 @@ class ModelBoilerTests: XCTestCase {
         let res = try XCTUnwrap(try Generator(source: str).generate())
         XCTAssertEqual(res, expected)
     }
+    
+    func testCamelCaseToUnderscore() throws {
+        
+        let str = """
+        struct Test {
+            var intVal = 1
+            var doubleVal = 2.33
+            var stringVal = "Hello"
+            var boolVal = true
+            var imageURL: URL
+        }
+        """
+        
+        let expected = """
+        enum CodingKeys: String, CodingKey {
+            case intVal = "int_val"
+            case doubleVal = "double_val"
+            case stringVal = "string_val"
+            case boolVal = "bool_val"
+            case imageURL = "image_url"
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(intVal, forKey: .intVal)
+            try container.encode(doubleVal, forKey: .doubleVal)
+            try container.encode(stringVal, forKey: .stringVal)
+            try container.encode(boolVal, forKey: .boolVal)
+            try container.encode(imageURL, forKey: .imageURL)
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            intVal = try container.decode(Int.self, forKey: .intVal)
+            doubleVal = try container.decode(Double.self, forKey: .doubleVal)
+            stringVal = try container.decode(String.self, forKey: .stringVal)
+            boolVal = try container.decode(Bool.self, forKey: .boolVal)
+            imageURL = try container.decode(URL.self, forKey: .imageURL)
+        }
+        """
+        
+        let res = try XCTUnwrap(try Generator(source: str, mapUnderscoreToCamelCase: true).generate())
+               XCTAssertEqual(res, expected)
+    }
 }

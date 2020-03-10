@@ -13,9 +13,11 @@ import SwiftSemantics
 class Generator {
     
     let source: String
+    let mapUnderscoreToCamelCase: Bool
     
-    init(source: String) {
+    init(source: String, mapUnderscoreToCamelCase: Bool = false) {
         self.source = source
+        self.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase
     }
     
     var encode: [String] = ["""
@@ -35,17 +37,43 @@ class Generator {
             """
     ]
     
-    func addNode(name: String, type: String, isOptional: Bool = false) {
+   func addNode(name: String, type: String, isOptional: Bool = false) {
         encode.append("    try container.encode(\(name), forKey: .\(name))")
         if isOptional {
             initStrings.append("    \(name) = try container.decodeIfPresent(\(type.trimmingCharacters(in: .init(charactersIn: "?"))).self, forKey: .\(name))")
         } else {
             initStrings.append("    \(name) = try container.decode(\(type).self, forKey: .\(name))")
         }
-        codingKeys.append("    case \(name) = \"\(name)\"")
+       
+        if mapUnderscoreToCamelCase {
+             codingKeys.append("    case \(name) = \"\(mapCamelToUnderscore(name))\"")
+        } else {
+             codingKeys.append("    case \(name) = \"\(name)\"")
+        }
     }
     
-   /// Generation is based on dumb pattern matchint
+    func mapCamelToUnderscore(_ string: String) -> String {
+        var res = ""
+
+        var strCopy = string[...]
+        while let match = parseWord(str: &strCopy) {
+            res += "_" + match.lowercased()
+        }
+        return res.trimmingCharacters(in: CharacterSet.init(charactersIn: "_"))
+    }
+    
+    func parseWord(str: inout Substring) -> String? {
+        
+        if let lowerMatch = Parser.lower.run(&str) {
+            return lowerMatch
+        }
+        if let upperThenLower = zip(Parser.upper, Parser.lower).run(&str) {
+            return upperThenLower.0 + upperThenLower.1
+        }
+        return Parser.upper.run(&str)
+    }
+    
+    /// Generation is based on dumb pattern matchint
       func generate() throws -> String {
           var collector = DeclarationCollector()
           let tree = try SyntaxParser.parse(source: source)
@@ -80,5 +108,39 @@ class Generator {
           
           return codingKeys.joined(separator: "\n") + encode.joined(separator: "\n") + initStrings.joined(separator: "\n")
       }
+}
+
+struct Parser<A> {
+    let run: (inout Substring) -> A?
+}
+
+extension Parser where A == String {
+    
+    static func predicate(_ predicate: @escaping (Character) -> Bool) -> Parser {
+        Parser { str in
+            let match = str.prefix(while: predicate)
+            guard !match.isEmpty else { return nil }
+            str.removeFirst(match.count)
+            return String(match)
+        }
+    }
+    
+    static let upper: Parser = .predicate { $0.isUppercase }
+    
+    static let lower: Parser = .predicate { $0.isLowercase }
+}
+
+func zip<A, B>(_ pa: Parser<A>, _ pb: Parser<B>) -> Parser<(A, B)> {
+    Parser { str in
+        let originalString = str
+        guard let a = pa.run(&str) else {
+            return nil
+        }
+        guard let b = pb.run(&str) else {
+            str = originalString
+            return nil
+        }
+        return (a, b)
+    }
 }
 

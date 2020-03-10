@@ -35,7 +35,7 @@ struct Service {
 //        
         do {
             // Try to generate the code
-            let code = try Generator(source: source).generate()
+            let code = try Generator(source: source, mapUnderscoreToCamelCase: !SettingsManager.isSettingEnabled(.NoCamelCaseConversion)).generate()
 
             // Play success sound
             playSound(Service.successSound)
