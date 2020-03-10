@@ -45,20 +45,37 @@ class Generator {
         codingKeys.append("    case \(name) = \"\(name)\"")
     }
     
-    func generate() throws -> String {
-        var collector = DeclarationCollector()
-        let tree = try SyntaxParser.parse(source: source)
-        tree.walk(&collector)
-        
-        for v in collector.variables {
-            addNode(name: v.name, type: v.typeAnnotation!, isOptional: v.typeAnnotation!.contains("?"))
-        }
-        
-        encode.append("}\n")
-        initStrings.append("}")
-        codingKeys.append("}\n")
-        
-        return codingKeys.joined(separator: "\n") + encode.joined(separator: "\n") + initStrings.joined(separator: "\n")
-    }
+   func generate() throws -> String {
+       var collector = DeclarationCollector()
+       let tree = try SyntaxParser.parse(source: source)
+       tree.walk(&collector)
+       
+       
+       for v in collector.variables {
+           let typeString: String
+           
+           switch (v.typeAnnotation, v.initializedValue) {
+           case (.some(let type), _):
+               typeString = type
+           case (_, .some(let value)) where value.contains("\""):
+               typeString = "String"
+           case (_, .some(let value)) where value.contains(".") && Double(value) != nil:
+               typeString = "Double"
+           case (_, .some(let value)) where Int(value) != nil:
+               typeString = "Int"
+           case (_, .some(let value)) where Set(value.unicodeScalars).contains(where: CharacterSet.init(charactersIn: "()").contains):
+               typeString = value.replacingOccurrences(of: "()", with: "")
+           default: throw NSError(domain: "dk.nodes.modelboiler", code: 1, userInfo: ["error": "Could not generate type for \(v)"])
+               
+           }
+           addNode(name: v.name, type: typeString, isOptional: typeString.contains("?"))
+       }
+       
+       encode.append("}\n")
+       initStrings.append("}")
+       codingKeys.append("}\n")
+       
+       return codingKeys.joined(separator: "\n") + encode.joined(separator: "\n") + initStrings.joined(separator: "\n")
+   }
 }
 

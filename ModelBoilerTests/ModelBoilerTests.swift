@@ -7,10 +7,11 @@
 //
 
 import XCTest
+@testable import Model_Boiler
 
 class ModelBoilerTests: XCTestCase {
     
-    func testExample() throws {
+    func testParsing() throws {
         struct TestStruct: Codable, Equatable {
             init(
                 string: String,
@@ -83,4 +84,64 @@ class ModelBoilerTests: XCTestCase {
         
     }
     
+    func testEmbedded() {
+        struct TestStruct: Codable, Equatable {
+            init(
+                string: String,
+                optionalString: String?,
+                dictionary: [String : Int],
+                optionalDictionary: [String : Int]?
+            ) {
+                self.string = string
+                self.optionalString = optionalString
+                self.dictionary = dictionary
+                self.optionalDictionary = optionalDictionary
+            }
+            
+            let string: String
+            let optionalString: String?
+            let dictionary: [String: Int]
+            let optionalDictionary: [String: Int]?
+        }
+    }
+    
+    func testTypeInference() throws {
+        let str = """
+        struct Test {
+            var custom = CustomType()
+            var custom2 = [CustomType]()
+            var intVal = 1
+            var doubleVal = 2.33
+            var stringVal = "Hello"
+        }
+        """
+        
+        let expected = """
+        enum CodingKeys: String, CodingKey {
+            case custom = "custom"
+            case custom2 = "custom2"
+            case intVal = "intVal"
+            case doubleVal = "doubleVal"
+            case stringVal = "stringVal"
+        }
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(custom, forKey: .custom)
+            try container.encode(custom2, forKey: .custom2)
+            try container.encode(intVal, forKey: .intVal)
+            try container.encode(doubleVal, forKey: .doubleVal)
+            try container.encode(stringVal, forKey: .stringVal)
+        }
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            custom = try container.decode(CustomType.self, forKey: .custom)
+            custom2 = try container.decode([CustomType].self, forKey: .custom2)
+            intVal = try container.decode(Int.self, forKey: .intVal)
+            doubleVal = try container.decode(Double.self, forKey: .doubleVal)
+            stringVal = try container.decode(String.self, forKey: .stringVal)
+        }
+        """
+        let res = try XCTUnwrap(try Generator(source: str).generate())
+        XCTAssertEqual(res, expected)
+    }
 }
