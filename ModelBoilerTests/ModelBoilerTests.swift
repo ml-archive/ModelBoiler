@@ -113,6 +113,7 @@ class ModelBoilerTests: XCTestCase {
             var intVal = 1
             var doubleVal = 2.33
             var stringVal = "Hello"
+            var boolVal = true
         }
         """
         
@@ -123,7 +124,9 @@ class ModelBoilerTests: XCTestCase {
             case intVal = "intVal"
             case doubleVal = "doubleVal"
             case stringVal = "stringVal"
+            case boolVal = "boolVal"
         }
+
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(custom, forKey: .custom)
@@ -131,7 +134,9 @@ class ModelBoilerTests: XCTestCase {
             try container.encode(intVal, forKey: .intVal)
             try container.encode(doubleVal, forKey: .doubleVal)
             try container.encode(stringVal, forKey: .stringVal)
+            try container.encode(boolVal, forKey: .boolVal)
         }
+
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             custom = try container.decode(CustomType.self, forKey: .custom)
@@ -139,6 +144,7 @@ class ModelBoilerTests: XCTestCase {
             intVal = try container.decode(Int.self, forKey: .intVal)
             doubleVal = try container.decode(Double.self, forKey: .doubleVal)
             stringVal = try container.decode(String.self, forKey: .stringVal)
+            boolVal = try container.decode(Bool.self, forKey: .boolVal)
         }
         """
         let res = try XCTUnwrap(try Generator(source: str).generate())
