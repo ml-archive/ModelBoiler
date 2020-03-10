@@ -52,7 +52,7 @@ open class UpdateManager: NSObject {
 
         // Start the request with completion handler
         session.dataTask(with: request, completionHandler: {
-            data, response, error in
+            data, _, error in
 
             // If error happened
             if let error = error {
@@ -73,7 +73,7 @@ open class UpdateManager: NSObject {
                 let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
 
                 // Convert to dictionary and compare versions
-                if let releases = json as? [[String : AnyObject]], let latest = releases.first {
+                if let releases = json as? [[String: AnyObject]], let latest = releases.first {
                     self.evaluateReleaseAndDownloadIfNeeded(latest, showAlerts: showAlerts)
                 } else {
                     NSUserNotification.display(
@@ -141,7 +141,7 @@ open class UpdateManager: NSObject {
         let session = URLSession.shared
 
         session.downloadTask(with: request, completionHandler: {
-            downloadedFileURL, response, error in
+            downloadedFileURL, _, error in
 
             // If error happened
             if let error = error {
@@ -211,7 +211,7 @@ open class UpdateManager: NSObject {
 
         // Prepare coordinator
         let coordinator = NSFileCoordinator(filePresenter: nil)
-        var error:NSError?
+        var error: NSError?
 
         // Start writing
         coordinator.coordinate(writingItemAt: destinationURL, options: .forDeleting, error: &error, byAccessor: { writeURL in
@@ -220,8 +220,8 @@ open class UpdateManager: NSObject {
 
                 // Replace the file first
                 try FileManager.default.replaceItem(at: writeURL,
-                    withItemAt: sourceURL,
-                    backupItemName: "\(appName)_old.app",
+                                                    withItemAt: sourceURL,
+                                                    backupItemName: "\(appName)_old.app",
                     options: .usingNewMetadataOnly,
                     resultingItemURL: &resultURL)
 
@@ -234,7 +234,7 @@ open class UpdateManager: NSObject {
                 }
 
                 // Set the proper permissions
-                let priviliges = [FileAttributeKey.posixPermissions : 493]
+                let priviliges = [FileAttributeKey.posixPermissions: 493]
                 try FileManager.default.setAttributes(priviliges, ofItemAtPath: finalURL.absoluteString)
 
                 // Show notifications
