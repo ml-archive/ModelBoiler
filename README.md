@@ -7,9 +7,11 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nodes-ios/ModelBoiler/blob/master/LICENSE)
 
 
-**Model Boiler** is a macOS application used to quickly generate model boilerplate code for models using [🐍 Serpent](https://github.com/nodes-ios/Serpent) and the `Serializable` protocol.
+**Model Boiler** is a macOS application used to quickly generate Codable conformance when you need custom mapping for one or more keys
 
+*Gif is outdated, but you get the point*
 ![Gif](modelboiler.gif)
+
 
 ## 📦 Installation
 
@@ -22,11 +24,13 @@ brew cask install model-boiler
 ~~~
 
 ### Release
-1. Head over to the [latest release](https://github.com/nodes-ios/ModelBoiler/releases/latest).
+
+1. Head over to the [latest release](https://github.com/nodes-ios/ModelBoiler/releases/latest)
 2. Download the `Model Boiler.app.zip`.
 3. Unzip & open the executable file.
 
 ### Manual
+
 1. Download or clone the repository.
 2. Install the dependencies by running `carthage bootstrap --platform osx` from the unzipped folder in your terminal.
 3. Open the `Model Boiler.xcodeproj`.
@@ -34,10 +38,9 @@ brew cask install model-boiler
 5. Choose Export ("Save Built Products" option) in the Organizer window.
 6. Open the executable located at:  
 
-~~~
+~~~bash
 ~/Desktop/Model Boiler {DATE}/Products/Applications/Model Boiler.app
 ~~~
-
 
 ## 💻 Usage
 
@@ -56,30 +59,27 @@ Model Boiler is a menu bar application, meaning that you won't find it's icon in
 
 **Custom shortcut** can be configured in the settings window of Model Boiler and the default shortcut is `⌘ + §`.
 
-### Key Override
-
-There is a hidden feature of Model Boiler that allows you to override the property key that should be used in the generated code. To be able to override the key just write a comment on the same line where your property is declared like this:
-
-~~~swift
-var name = "" // <-customNameKey
-~~~
-
-This will then use the specified key in the generated code. However, note that this will override all other key modifications that Model Boiler normally does (like automatic camelCase -> snake_case conversion).
-
-
 **Note:** Model Boiler currently doesn't support nested structs. You will need to generate boilerplate code for your nested structs separately.
 
-## :octocat: Dependencies
-#### [Serpent](https://github.com/nodes-ios/Serpent)  
-> A protocol to serialize Swift structs and classes for encoding and decoding. 
+## 📝 Requirements
 
-You will need this dependency if you want to use the generated boiler plate code.
-   
-#### [model-generator](https://github.com/nodes-ios/model-generator)  
-The underlying framework used for the actual generation of the code. Can be also used as a command line tool if you choose to go all nerd.
+Xcode 11.4  
+Swift 5.2
+
+## :octocat: Dependencies
+
+### [SwiftSyntax](https://github.com/apple/swift-syntax)
+
+> A tool for inspecting and rewriting Swift code
+
+### [SwiftSemantics](https://github.com/SwiftDocOrg/SwiftSemantics)
+
+> Convenience on top of SwiftSyntax
 
 ## 👥 Credits
+
 Made with ❤️ at [Nodes](http://nodesagency.com).
 
 ## 📄 License
+
 **Model Boiler** is available under the MIT license. See the [LICENSE](https://github.com/nodes-ios/ModelBoiler/blob/master/LICENSE) file for more info.

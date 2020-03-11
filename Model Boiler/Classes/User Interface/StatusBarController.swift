@@ -81,12 +81,12 @@ class StatusBarController: NSObject, NSMenuDelegate {
         soundItem.tag    = MenuItem.soundEnabled.rawValue
         optionsMenu.addItem(soundItem)
 
-        // Generate Initializer only
-        let initializerOnlyItem    = NSMenuItem(title: "Only generate initializer (useful for use with Realm/CoreData)", action: #selector(toggleOnlyCreateInitializers), keyEquivalent: "")
-        initializerOnlyItem.state  = SettingsManager.isSettingEnabled(.OnlyCreateInitializer) ? .on : .off
-        initializerOnlyItem.target = self
-        initializerOnlyItem.tag    = MenuItem.onlyCreateInitializer.rawValue
-        optionsMenu.addItem(initializerOnlyItem)
+        //        // Generate Initializer only
+        //        let initializerOnlyItem    = NSMenuItem(title: "Only generate initializer (useful for use with Realm/CoreData)", action: #selector(toggleOnlyCreateInitializers), keyEquivalent: "")
+        //        initializerOnlyItem.state  = SettingsManager.isSettingEnabled(.OnlyCreateInitializer) ? .on : .off
+        //        initializerOnlyItem.target = self
+        //        initializerOnlyItem.tag    = MenuItem.onlyCreateInitializer.rawValue
+        //        optionsMenu.addItem(initializerOnlyItem)
 
         // Separator
         statusMenu.addItem(NSMenuItem.separatorItemWithTag(MenuItem.separator.rawValue))

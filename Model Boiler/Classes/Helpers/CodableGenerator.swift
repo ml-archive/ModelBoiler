@@ -61,7 +61,7 @@ class Generator {
         }
         return res.trimmingCharacters(in: CharacterSet.init(charactersIn: "_"))
     }
-    /// Generation is based on dumb pattern matchint
+    /// Generation is based on dumb pattern matching
     func generate() throws -> String {
         var collector = DeclarationCollector()
         let tree = try SyntaxParser.parse(source: source)

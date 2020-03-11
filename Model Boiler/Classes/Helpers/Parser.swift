@@ -32,7 +32,7 @@ extension Parser where A == String {
             if let lowerMatch = Parser.lower.run(&str) {
                 return lowerMatch
             }
-            if let upperThenLower = zip(Parser.upper, Parser.lower).run(&str) {
+            if let upperThenLower = zip(Parser.upper, .lower).run(&str) {
                 return upperThenLower.0 + upperThenLower.1
             }
             return Parser.upper.run(&str)
